@@ -2,7 +2,7 @@
 #define APP_H
 
 #include "Window.h"
-#include "VKRenderer.h"
+#include "Vulkan/VKRenderer.h"
 
 namespace Hydro{
 	class App{
