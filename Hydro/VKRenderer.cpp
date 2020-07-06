@@ -275,7 +275,7 @@ void VKRenderer::CreateLogicalDevice(){
 
 	createInfo.pEnabledFeatures = &deviceFeatures;
 
-	createInfo.enabledExtensionCount = deviceExtensions.size();
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
 	createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
 	if(enableValidationLayers){
@@ -416,22 +416,19 @@ void VKRenderer::CreateRenderPass(){
 }
 
 void VKRenderer::CreateGraphicsPipeline(){
-	auto vertShaderCode = VKShader::ReadFile("Resources/CompiledShaders/triangle-vert.spv");
-	auto fragShaderCode = VKShader::ReadFile("Resources/CompiledShaders/triangle-frag.spv");
-
-	VkShaderModule vertShaderModule = CreateShaderModule(vertShaderCode);
-	VkShaderModule fragShaderModule = CreateShaderModule(fragShaderCode);
+	//Created on stack so this gets cleaned up at the end of this function
+	VKShader shader = VKShader(device, "Resources/CompiledShaders/triangle-vert.spv", "Resources/CompiledShaders/triangle-frag.spv");
 
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
 	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 	vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
-	vertShaderStageInfo.module = vertShaderModule;
+	vertShaderStageInfo.module = shader.GetVertModule();
 	vertShaderStageInfo.pName = "main";
 
 	VkPipelineShaderStageCreateInfo fragShaderStageInfo{};
 	fragShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 	fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-	fragShaderStageInfo.module = fragShaderModule;
+	fragShaderStageInfo.module = shader.GetFragModule();
 	fragShaderStageInfo.pName = "main";
 
 	VkPipelineShaderStageCreateInfo shaderStages[] = { vertShaderStageInfo, fragShaderStageInfo };
@@ -555,10 +552,6 @@ void VKRenderer::CreateGraphicsPipeline(){
 	if(vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS){
 		throw std::runtime_error("Failed to create graphics pipeline!");
 	}
-
-	//Once shaders are loaded into the graphics pipeline we don't need to hold onto them anymore
-	vkDestroyShaderModule(device, fragShaderModule, nullptr);
-	vkDestroyShaderModule(device, vertShaderModule, nullptr);
 }
 
 void VKRenderer::CreateFramebuffers(){
@@ -741,20 +734,6 @@ void VKRenderer::RecreateSwapChain(){
 	CreateGraphicsPipeline();
 	CreateFramebuffers();
 	CreateCommandBuffers();
-}
-
-VkShaderModule VKRenderer::CreateShaderModule(const std::vector<char>& code){
-	VkShaderModuleCreateInfo createInfo{};
-	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-	createInfo.codeSize = code.size();
-	createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data()); //This is gross
-
-	VkShaderModule shaderModule;
-	if(vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS){
-		throw std::runtime_error("Failed to create shader module!");
-	}
-
-	return shaderModule;
 }
 
 uint32_t VKRenderer::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties){

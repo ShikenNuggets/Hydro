@@ -1,6 +1,7 @@
 #ifndef VK_RENDERER_H
 #define VK_RENDERER_H
 
+#include "FileSystem.h"
 #include "Window.h"
 
 #include <iostream>
@@ -20,6 +21,8 @@ namespace Hydro{
 	};
 
 	struct SwapChainSupportDetails{
+		SwapChainSupportDetails() : capabilities(), formats(), presentModes(){}
+
 		VkSurfaceCapabilitiesKHR capabilities;
 		std::vector<VkSurfaceFormatKHR> formats;
 		std::vector<VkPresentModeKHR> presentModes;
@@ -96,8 +99,6 @@ namespace Hydro{
 		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 		VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
-
-		VkShaderModule CreateShaderModule(const std::vector<char>& code);
 
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 

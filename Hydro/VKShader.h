@@ -9,15 +9,18 @@
 namespace Hydro{
 	class VKShader{
 	public:
-		VKShader(const std::string& vertFile, const std::string& fragFile);
+		VKShader(VkDevice device_, const std::string& vertFile, const std::string& fragFile);
 		~VKShader();
 
-		VkShaderModule GetShaderModule() const{ return shaderModule; }
-
-		static std::vector<char> ReadFile(const std::string& fileName);
+		VkShaderModule GetVertModule() const{ return vert; }
+		VkShaderModule GetFragModule() const{ return frag; }
 
 	private:
-		VkShaderModule shaderModule;
+		VkDevice device;
+		VkShaderModule vert;
+		VkShaderModule frag;
+
+		VkShaderModule CreateShaderModule(const std::vector<char>& code);
 	};
 }
 
