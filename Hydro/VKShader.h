@@ -1,7 +1,7 @@
 #ifndef VK_SHADER_H
 #define VK_SHADER_H
 
-#include <fstream>
+#include <string>
 #include <vector>
 
 #include <vulkan/vulkan.h>

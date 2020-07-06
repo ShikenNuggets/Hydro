@@ -97,7 +97,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <OmitDefaultLibName>true</OmitDefaultLibName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -115,7 +115,7 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <OmitDefaultLibName>true</OmitDefaultLibName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -135,7 +135,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <OmitDefaultLibName>true</OmitDefaultLibName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -153,7 +153,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
       <OmitDefaultLibName>true</OmitDefaultLibName>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>

@@ -1,5 +1,7 @@
 #include "VKShader.h"
 
+#include <stdexcept>
+
 #include "FileSystem.h"
 
 using namespace Hydro;

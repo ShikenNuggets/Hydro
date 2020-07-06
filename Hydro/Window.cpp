@@ -56,7 +56,7 @@ void Window::HandleWindowEvent(SDL_Event e){
 			state = State::Visible;
 			break;
 		case SDL_WINDOWEVENT_HIDDEN:
-			state == State::Hidden;
+			state = State::Hidden;
 			break;
 		case SDL_WINDOWEVENT_MINIMIZED:
 			state = State::Minimized;
