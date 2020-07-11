@@ -55,6 +55,10 @@ namespace Hydro{
 		float y;
 		float z;
 
+		static const Vector3 worldUp;
+		static const Vector3 worldForward;
+		static const Vector3 worldRight;
+
 		explicit Vector3(float x_ = 0.0f, float y_ = 0.0f, float z_ = 0.0f);
 
 		inline static Vector3 Zero(){ return Vector3(0.0f, 0.0f, 0.0f); }

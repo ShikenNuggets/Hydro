@@ -21,7 +21,10 @@
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="Math\Euler.h" />
     <ClInclude Include="Math\Math.h" />
+    <ClInclude Include="Math\Matrix.h" />
+    <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Math\Vector.h" />
     <ClInclude Include="VKVertex.h" />
     <ClInclude Include="Vulkan\VKRenderer.h" />
@@ -31,6 +34,11 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="Math\Euler.cpp" />
+    <ClCompile Include="Math\Matrix2.cpp" />
+    <ClCompile Include="Math\Matrix3.cpp" />
+    <ClCompile Include="Math\Matrix4.cpp" />
+    <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Math\Vector2.cpp" />
     <ClCompile Include="Math\Vector3.cpp" />
     <ClCompile Include="Math\Vector4.cpp" />

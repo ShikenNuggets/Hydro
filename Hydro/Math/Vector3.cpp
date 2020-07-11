@@ -6,6 +6,10 @@
 
 using namespace Hydro;
 
+const Vector3 Vector3::worldUp =		Vector3(0.0f, 1.0f, 0.0f);
+const Vector3 Vector3::worldForward =	Vector3(0.0f, 0.0f, 1.0f);
+const Vector3 Vector3::worldRight =		Vector3(1.0f, 0.0f, 0.0f);
+
 Vector3::Vector3(float x_, float y_, float z_) : x(x_), y(y_), z(z_){}
 
 Vector3 Vector3::operator -() const{

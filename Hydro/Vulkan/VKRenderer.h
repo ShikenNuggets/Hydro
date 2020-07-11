@@ -3,6 +3,7 @@
 
 #include "FileSystem.h"
 #include "Window.h"
+#include "Math/Matrix.h"
 
 #include <iostream>
 #include <optional>
@@ -26,6 +27,14 @@ namespace Hydro{
 		VkSurfaceCapabilitiesKHR capabilities;
 		std::vector<VkSurfaceFormatKHR> formats;
 		std::vector<VkPresentModeKHR> presentModes;
+	};
+
+	struct UniformBufferObject{
+		//Things in this structure should be explicitly aligned in case we modify it
+		//If we don't rendering could break entirely
+		alignas(16) Matrix4 model;
+		alignas(16) Matrix4 view;
+		alignas(16) Matrix4 proj;
 	};
 
 	class VKRenderer{
@@ -53,6 +62,7 @@ namespace Hydro{
 		std::vector<VkImageView> swapChainImageViews;
 		std::vector<VkFramebuffer> swapChainFramebuffers;
 		VkRenderPass renderPass;
+		VkDescriptorSetLayout descriptorSetLayout;
 		VkPipelineLayout pipelineLayout;
 		VkPipeline graphicsPipeline;
 		VkCommandPool commandPool;
@@ -67,6 +77,10 @@ namespace Hydro{
 		VkDeviceMemory vertexBufferMemory;
 		VkBuffer indexBuffer;
 		VkDeviceMemory indexBufferMemory;
+		std::vector<VkBuffer> uniformBuffers;
+		std::vector<VkDeviceMemory> uniformBuffersMemory;
+		VkDescriptorPool descriptorPool;
+		std::vector<VkDescriptorSet> descriptorSets;
 
 		static constexpr int MAX_FRAMES_IN_FLIGHT = 3;
 		static const std::vector<const char*> validationLayers;
@@ -81,6 +95,7 @@ namespace Hydro{
 		void CreateSwapChain();
 		void CreateImageViews();
 		void CreateRenderPass();
+		void CreateDescriptorSetLayout();
 		void CreateGraphicsPipeline();
 		void CreateFramebuffers();
 		void CreateCommandPool();
@@ -88,6 +103,9 @@ namespace Hydro{
 		void CopyBuffer(VkBuffer sourceBuffer, VkBuffer destBuffer, VkDeviceSize size);
 		void CreateVertexBuffer();
 		void CreateIndexBuffer();
+		void CreateUniformBuffers();
+		void CreateDescriptorPool();
+		void CreateDescriptorSets();
 		void CreateCommandBuffers();
 		void CreateSyncObjects();
 
@@ -106,6 +124,8 @@ namespace Hydro{
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+
+		void UpdateUniformBuffer(uint32_t currentImage);
 
 		//Debug stuff
 		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
