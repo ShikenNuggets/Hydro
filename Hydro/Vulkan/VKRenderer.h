@@ -81,6 +81,10 @@ namespace Hydro{
 		std::vector<VkDeviceMemory> uniformBuffersMemory;
 		VkDescriptorPool descriptorPool;
 		std::vector<VkDescriptorSet> descriptorSets;
+		VkImage textureImage;
+		VkDeviceMemory textureImageMemory;
+		VkImageView textureImageView;
+		VkSampler textureSampler;
 
 		static constexpr int MAX_FRAMES_IN_FLIGHT = 3;
 		static const std::vector<const char*> validationLayers;
@@ -99,6 +103,11 @@ namespace Hydro{
 		void CreateGraphicsPipeline();
 		void CreateFramebuffers();
 		void CreateCommandPool();
+		void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+		VkImageView CreateImageView(VkImage image, VkFormat format);
+		void CreateTextureImage();
+		void CreateTextureImageView();
+		void CreateTextureSampler();
 		void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 		void CopyBuffer(VkBuffer sourceBuffer, VkBuffer destBuffer, VkDeviceSize size);
 		void CreateVertexBuffer();
@@ -126,6 +135,12 @@ namespace Hydro{
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 
 		void UpdateUniformBuffer(uint32_t currentImage);
+
+		VkCommandBuffer BeginSingleTimeCommand();
+		void EndSingleTimeCommand(VkCommandBuffer commandBuffer);
+
+		void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+		void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 
 		//Debug stuff
 		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
