@@ -47,14 +47,14 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)-Intermediate\</IntDir>
-    <IncludePath>$(SolutionDir)Hydro;$(SolutionDir)SDK\SDL2\include;$(SolutionDir)SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Hydro;$(SolutionDir)SDK\include;$(SolutionDir)SDK\SDL2\include;$(SolutionDir)SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Build\Hydro\$(Configuration);$(SolutionDir)Build\SDL2\$(Configuration);$(SolutionDir)Build\SDL2main\$(Configuration);$(SolutionDir)Build\SDL2_image\$(Configuration);C:\VulkanSDK\1.2.141.2\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)-Intermediate\</IntDir>
-    <IncludePath>$(SolutionDir)Hydro;$(SolutionDir)SDK\SDL2\include;$(SolutionDir)SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Hydro;$(SolutionDir)SDK\include;$(SolutionDir)SDK\SDL2\include;$(SolutionDir)SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Build\Hydro\$(Configuration);$(SolutionDir)Build\SDL2\$(Configuration);$(SolutionDir)Build\SDL2main\$(Configuration);$(SolutionDir)Build\SDL2_image\$(Configuration);C:\VulkanSDK\1.2.141.2\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

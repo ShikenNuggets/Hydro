@@ -8,11 +8,14 @@
 #include <exception>
 #include <iostream>
 #include <set>
+#include <unordered_map>
 #include <vector>
 
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_vulkan.h>
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
 
 using namespace Hydro;
 
@@ -24,24 +27,8 @@ const std::vector<const char*> VKRenderer::deviceExtensions = {
 	VK_KHR_SWAPCHAIN_EXTENSION_NAME
 };
 
-const std::vector<VKVertex> vertices = {
-	//First square
-	{ Vector3(-0.5f, -0.5f, 0.0f),	Vector3(1.0f, 0.0f, 0.0f),	Vector2(1.0f, 0.0f) },
-	{ Vector3(0.5f, -0.5f, 0.0f),	Vector3(0.0f, 1.0f, 0.0f),	Vector2(0.0f, 0.0f) },
-	{ Vector3(0.5f, 0.5f, 0.0f),	Vector3(0.0f, 0.0f, 1.0f),	Vector2(0.0f, 1.0f)},
-	{ Vector3(-0.5f, 0.5f, 0.0f),	Vector3(1.0f, 1.0f, 1.0f),	Vector2(1.0f, 1.0f)},
-
-	//Second square
-	{ Vector3(-0.5f, -0.5f, -0.5f),	Vector3(1.0f, 0.0f, 0.0f),	Vector2(1.0f, 0.0f) },
-	{ Vector3(0.5f, -0.5f, -0.5f),	Vector3(0.0f, 1.0f, 0.0f),	Vector2(0.0f, 0.0f) },
-	{ Vector3(0.5f, 0.5f, -0.5f),	Vector3(0.0f, 0.0f, 1.0f),	Vector2(0.0f, 1.0f)},
-	{ Vector3(-0.5f, 0.5f, -0.5f),	Vector3(1.0f, 1.0f, 1.0f),	Vector2(1.0f, 1.0f)}
-};
-
-const std::vector<uint16_t> indices = {
-	0, 1, 2, 2, 3, 0,	//First square
-	4, 5, 6, 6, 7, 4	//Second square
-};
+const std::string MODEL_PATH = "Resources/Models/viking_room.obj";
+const std::string TEXTURE_PATH = "Resources/Textures/viking_room.png";
 
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
@@ -68,6 +55,7 @@ VKRenderer::VKRenderer(Window* window_) : window(window_), instance(nullptr), de
 	CreateTextureImage();
 	CreateTextureImageView();
 	CreateTextureSampler();
+	LoadModel();
 	CreateVertexBuffer();
 	CreateIndexBuffer();
 	CreateUniformBuffers();
@@ -739,7 +727,7 @@ void VKRenderer::CreateTextureImage(){
 		throw std::runtime_error("SDL_image could not initialize! SDL_image Error: " + err);
 	}
 
-	SDL_Surface* textureSurface = IMG_Load("Resources/Textures/texture.png");
+	SDL_Surface* textureSurface = IMG_Load(TEXTURE_PATH.c_str());
 	if(textureSurface == NULL || textureSurface->pixels == NULL){
 		std::string err = IMG_GetError();
 		throw std::runtime_error("Could not load image! SDL_image Error: " + err);
@@ -831,6 +819,31 @@ void VKRenderer::CopyBuffer(VkBuffer sourceBuffer, VkBuffer destBuffer, VkDevice
 	vkCmdCopyBuffer(commandBuffer, sourceBuffer, destBuffer, 1, &copyRegion);
 
 	EndSingleTimeCommand(commandBuffer);
+}
+
+void VKRenderer::LoadModel(){
+	tinyobj::attrib_t attrib;
+	std::vector<tinyobj::shape_t> shapes;
+	std::vector<tinyobj::material_t> materials;
+	std::string warn, err;
+
+	if(!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str())){
+		throw std::runtime_error(warn + err);
+	}
+
+	for(const auto& shape : shapes){
+		for(const auto& index : shape.mesh.indices){
+			VKVertex vertex{
+				Vector3(attrib.vertices[3 * index.vertex_index + 0], attrib.vertices[3 * index.vertex_index + 1], attrib.vertices[3 * index.vertex_index + 2]),
+				Vector3(1.0f, 1.0f, 1.0f),
+				Vector2(attrib.texcoords[2 * index.texcoord_index + 0], 1.0f - attrib.texcoords[2 * index.texcoord_index + 1])
+			};
+
+			//No vertex de-duplication... to complicated to implement for this simple example code
+			vertices.push_back(vertex);
+			indices.push_back(indices.size());
+		}
+	}
 }
 
 void VKRenderer::CreateVertexBuffer(){
@@ -989,7 +1002,7 @@ void VKRenderer::CreateCommandBuffers(){
 			VkBuffer vertexBuffers[] = { vertexBuffer };
 			VkDeviceSize offsets[] = { 0 };
 			vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
-			vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+			vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 			vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
 			vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
 		vkCmdEndRenderPass(commandBuffers[i]);

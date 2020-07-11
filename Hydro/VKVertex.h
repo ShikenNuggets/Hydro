@@ -3,6 +3,8 @@
 
 #include <array>
 
+#include <vulkan/vulkan.h>
+
 #include "Math/Vector.h"
 
 namespace Hydro{

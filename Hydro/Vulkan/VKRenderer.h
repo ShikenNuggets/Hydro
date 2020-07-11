@@ -1,15 +1,16 @@
 #ifndef VK_RENDERER_H
 #define VK_RENDERER_H
 
-#include "FileSystem.h"
-#include "Window.h"
-#include "Math/Matrix.h"
-
 #include <iostream>
 #include <optional>
 #include <vector>
 
 #include <vulkan/vulkan.h>
+
+#include "FileSystem.h"
+#include "VKVertex.h"
+#include "Window.h"
+#include "Math/Matrix.h"
 
 namespace Hydro{
 	struct QueueFamilyIndices{
@@ -73,6 +74,8 @@ namespace Hydro{
 		std::vector<VkFence> imagesInFlight;
 		size_t currentFrame;
 		static volatile bool windowResized; //TODO - This is a hack
+		std::vector<VKVertex> vertices;
+		std::vector<uint32_t> indices;
 		VkBuffer vertexBuffer;
 		VkDeviceMemory vertexBufferMemory;
 		VkBuffer indexBuffer;
@@ -114,6 +117,7 @@ namespace Hydro{
 		void CreateTextureSampler();
 		void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 		void CopyBuffer(VkBuffer sourceBuffer, VkBuffer destBuffer, VkDeviceSize size);
+		void LoadModel();
 		void CreateVertexBuffer();
 		void CreateIndexBuffer();
 		void CreateUniformBuffers();
