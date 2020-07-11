@@ -85,6 +85,9 @@ namespace Hydro{
 		VkDeviceMemory textureImageMemory;
 		VkImageView textureImageView;
 		VkSampler textureSampler;
+		VkImage depthImage;
+		VkDeviceMemory depthImageMemory;
+		VkImageView depthImageView;
 
 		static constexpr int MAX_FRAMES_IN_FLIGHT = 3;
 		static const std::vector<const char*> validationLayers;
@@ -103,8 +106,9 @@ namespace Hydro{
 		void CreateGraphicsPipeline();
 		void CreateFramebuffers();
 		void CreateCommandPool();
+		void CreateDepthResources();
 		void CreateImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
-		VkImageView CreateImageView(VkImage image, VkFormat format);
+		VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
 		void CreateTextureImage();
 		void CreateTextureImageView();
 		void CreateTextureSampler();
@@ -133,6 +137,9 @@ namespace Hydro{
 		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
 		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+		VkFormat FindDepthFormat();
+		bool HasStencilComponent(VkFormat format);
 
 		void UpdateUniformBuffer(uint32_t currentImage);
 

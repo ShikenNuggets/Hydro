@@ -7,9 +7,9 @@
 
 namespace Hydro{
 	struct VKVertex{
-		VKVertex(const Vector2& pos_, const Vector3& color_, const Vector2& texCoords_) : pos(pos_), color(color_), texCoords(texCoords_){}
+		VKVertex(const Vector3& pos_, const Vector3& color_, const Vector2& texCoords_) : pos(pos_), color(color_), texCoords(texCoords_){}
 
-		Vector2 pos;
+		Vector3 pos;
 		Vector3 color; //TODO - Use special Color struct
 		Vector2 texCoords;
 
@@ -26,7 +26,7 @@ namespace Hydro{
 			std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
 			attributeDescriptions[0].binding = 0;
 			attributeDescriptions[0].location = 0;
-			attributeDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+			attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
 			attributeDescriptions[0].offset = offsetof(VKVertex, pos);
 
 			attributeDescriptions[1].binding = 0;

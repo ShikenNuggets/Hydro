@@ -355,14 +355,21 @@ Matrix4 Matrix4::UnOrtho(const Matrix4& ortho){
 }
 
 //Courtesy of Scott
-Matrix4 Matrix4::Perspective(const float fov_, const float aspect_, const float nearPlane_, const float farPlane_){
+Matrix4 Matrix4::Perspective(const float fov_, const float aspect_, const float near_, const float far_){
 	float cot = 1.0f / tan(Math::ConvertToRadians(fov_* 0.5f));
 	//Don't forget, this looks row centric but it really is a column matrix - right-hand rule rules
-	Matrix4 result(cot/aspect_, 0.0f,   0.0f,                             0.0f,
-		0.0f,		  cot,	  0.0f, 	                        0.0f,
-		0.0f,       0.0f,   (nearPlane_ + farPlane_)/(nearPlane_ - farPlane_),       -1.0,
-		0.0,        0.0,    (2.0f*nearPlane_*farPlane_)/(nearPlane_-farPlane_),   0.0);
-	return result;
+	//OPENGL
+	/*Matrix4 result(	cot/aspect_,	0.0f,	0.0f,							0.0f,
+					0.0f,			cot,	0.0f,							0.0f,
+					0.0f,			0.0f,	(near_ + far_)/(near_ - far_),	-1.0,
+					0.0,			0.0,	(2.0f*near_*far_)/(near_-far_),	0.0);
+	return result;*/
+
+	//VULKAN
+	return Matrix4 (cot / aspect_,	0.0f,	0.0f,								0.0f,
+					0.0f,			-cot,	0.0f,								0.0f,
+					0.0f,			0.0f,	far_ / (near_ - far_),				-1.0,
+					0.0,			0.0,	-(far_ * near_) / (far_ - near_),	0.0);
 
 	//Old one by Carter which probably doesn't work
 	/*
