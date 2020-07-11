@@ -1,6 +1,6 @@
 #include "Window.h"
 
-#include "VKRenderer.h"
+#include "Vulkan/VKRenderer.h"
 
 #include <exception>
 
