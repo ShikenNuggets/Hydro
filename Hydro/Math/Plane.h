@@ -3,7 +3,7 @@
 
 #include "Vector.h"
 
-namespace PizzaBox{
+namespace Hydro{
 	struct Plane{
 
 		Vector3 point;

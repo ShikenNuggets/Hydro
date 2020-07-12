@@ -1,93 +1,88 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Math">
+      <UniqueIdentifier>{AFF4887C-9B2B-8A0D-4418-7010302E060F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Vulkan">
+      <UniqueIdentifier>{D6EAFCD8-C28C-27AF-AB47-3B039788AEFF}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="App.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Vector.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="App.h" />
+    <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="Math\Euler.h">
+      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\Math.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VKVertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\VKRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Vulkan\VKShader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\Matrix.h">
-      <Filter>Header Files</Filter>
+      <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Math\Euler.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Math\Plane.h">
+      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\Quaternion.h">
-      <Filter>Header Files</Filter>
+      <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Rect.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Sphere.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vector.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="VKVertex.h" />
+    <ClInclude Include="Vulkan\VKRenderer.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Vulkan\VKShader.h">
+      <Filter>Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\Vector2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\Vector3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Math\Vector4.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FileSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\VKRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Vulkan\VKShader.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="Math\Euler.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Matrix2.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Matrix3.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Matrix4.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="Math\Euler.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="Math\Plane.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="Math\Quaternion.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="Math\Sphere.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Vector2.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Vector3.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Vector4.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VKRenderer.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Vulkan\VKShader.cpp">
+      <Filter>Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
 </Project>

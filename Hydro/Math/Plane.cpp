@@ -1,6 +1,6 @@
 #include "Plane.h"
 
-using namespace PizzaBox;
+using namespace Hydro;
 
 Plane::Plane(const float x_, const float y_, const float z_, const float d_) : point(x_, y_, z_), d(d_){
 }

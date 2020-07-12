@@ -3,7 +3,7 @@
 
 #include "Vector.h"
 
-namespace PizzaBox{
+namespace Hydro{
 	struct Sphere{
 		Vector3 point;
 		float radius;

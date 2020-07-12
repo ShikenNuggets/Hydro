@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -11,9 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{7FA9857C-6BE0-860D-14CD-6C1000E3020F}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{c0ffc746-f2fc-4021-a5e2-992369910735}</ProjectGuid>
     <RootNamespace>Game</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -21,20 +21,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -45,24 +43,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)-Intermediate\</IntDir>
-    <IncludePath>$(SolutionDir)Hydro;$(SolutionDir)SDK\include;$(SolutionDir)SDK\SDL2\include;$(SolutionDir)SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Build\Hydro\$(Configuration);$(SolutionDir)Build\SDL2\$(Configuration);$(SolutionDir)Build\SDL2main\$(Configuration);$(SolutionDir)Build\SDL2_image\$(Configuration);C:\VulkanSDK\1.2.141.2\Lib;$(LibraryPath)</LibraryPath>
+    <OutDir>..\Build\Game\Debug\</OutDir>
+    <IntDir>..\Build\Intermediate\Game\Debug\Game\</IntDir>
+    <TargetName>Game</TargetName>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)-Intermediate\</IntDir>
-    <IncludePath>$(SolutionDir)Hydro;$(SolutionDir)SDK\include;$(SolutionDir)SDK\SDL2\include;$(SolutionDir)SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)Build\Hydro\$(Configuration);$(SolutionDir)Build\SDL2\$(Configuration);$(SolutionDir)Build\SDL2main\$(Configuration);$(SolutionDir)Build\SDL2_image\$(Configuration);C:\VulkanSDK\1.2.141.2\Lib;$(LibraryPath)</LibraryPath>
+    <OutDir>..\Build\Game\Release\</OutDir>
+    <IntDir>..\Build\Intermediate\Game\Release\Game\</IntDir>
+    <TargetName>Game</TargetName>
+    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>HYDRO_PLATFORM_WIN32;HYDRO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;..\Hydro;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -70,24 +72,29 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Hydro.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Build\Hydro\Debug;..\Build\SDL2\Debug;..\Build\SDL2main\Debug;..\Build\SDL2_image\Debug;C:\VulkanSDK\1.2.141.2\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
     <PostBuildEvent>
       <Command>echo D|xcopy "$(SolutionDir)Build\SDL2\$(Configuration)\*.*" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Build\SDL2_image\$(Configuration)\*.*" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)Resources" /y /E</Command>
     </PostBuildEvent>
-    <Manifest>
-      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
-    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>HYDRO_PLATFORM_WIN32;HYDRO_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;..\Hydro;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -95,17 +102,17 @@ echo D|xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)Resources" /y /E</Comman
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>Hydro.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Build\Hydro\Release;..\Build\SDL2\Release;..\Build\SDL2main\Release;..\Build\SDL2_image\Release;C:\VulkanSDK\1.2.141.2\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
     <PostBuildEvent>
       <Command>echo D|xcopy "$(SolutionDir)Build\SDL2\$(Configuration)\*.*" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Build\SDL2_image\$(Configuration)\*.*" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)Resources" /y /E</Command>
     </PostBuildEvent>
-    <Manifest>
-      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
-    </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

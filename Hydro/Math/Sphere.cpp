@@ -1,6 +1,6 @@
 #include "Sphere.h"
 
-using namespace PizzaBox;
+using namespace Hydro;
 
 Sphere::Sphere(const float x_, const float y_, const float z_, const float r_) : point(x_, y_, z_), radius(r_){
 }
