@@ -39,7 +39,7 @@ project "Hydro"
 	language "C++"
 	
 	targetdir ("Build/%{prj.name}/%{cfg.buildcfg}/") 
-	objdir ("Build/Intermediate/%{prj.name}/%{cfg.buildcfg}/") 
+	objdir ("Build/temp/%{prj.name}/%{cfg.buildcfg}/") 
 	
 	files
 	{
@@ -114,7 +114,7 @@ project "Game"
 	dpiawareness "HighPerMonitor"
 	
 	targetdir ("Build/%{prj.name}/%{cfg.buildcfg}/") 
-	objdir ("Build/Intermediate//%{prj.name}/%{cfg.buildcfg}/%{prj.name}") 
+	objdir ("Build/temp//%{prj.name}/%{cfg.buildcfg}/%{prj.name}") 
 	
 	files
 	{

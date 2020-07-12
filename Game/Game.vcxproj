@@ -44,14 +44,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>..\Build\Game\Debug\</OutDir>
-    <IntDir>..\Build\Intermediate\Game\Debug\Game\</IntDir>
+    <IntDir>..\Build\temp\Game\Debug\Game\</IntDir>
     <TargetName>Game</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>..\Build\Game\Release\</OutDir>
-    <IntDir>..\Build\Intermediate\Game\Release\Game\</IntDir>
+    <IntDir>..\Build\temp\Game\Release\Game\</IntDir>
     <TargetName>Game</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>

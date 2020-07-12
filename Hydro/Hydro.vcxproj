@@ -43,13 +43,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\Build\Hydro\Debug\</OutDir>
-    <IntDir>..\Build\Intermediate\Hydro\Debug\</IntDir>
+    <IntDir>..\Build\temp\Hydro\Debug\</IntDir>
     <TargetName>Hydro</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\Build\Hydro\Release\</OutDir>
-    <IntDir>..\Build\Intermediate\Hydro\Release\</IntDir>
+    <IntDir>..\Build\temp\Hydro\Release\</IntDir>
     <TargetName>Hydro</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
