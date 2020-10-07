@@ -4,23 +4,23 @@
 #include <string>
 #include <vector>
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 
 namespace Hydro{
 	class VKShader{
 	public:
-		VKShader(VkDevice device_, const std::string& vertFile, const std::string& fragFile);
+		VKShader(vk::Device device_, const std::string& vertFile, const std::string& fragFile);
 		~VKShader();
 
-		VkShaderModule GetVertModule() const{ return vert; }
-		VkShaderModule GetFragModule() const{ return frag; }
+		vk::ShaderModule GetVertModule() const{ return vert; }
+		vk::ShaderModule GetFragModule() const{ return frag; }
 
 	private:
-		VkDevice device;
-		VkShaderModule vert;
-		VkShaderModule frag;
+		vk::Device device;
+		vk::ShaderModule vert;
+		vk::ShaderModule frag;
 
-		VkShaderModule CreateShaderModule(const std::vector<char>& code);
+		vk::ShaderModule CreateShaderModule(const std::vector<char>& code);
 	};
 }
 

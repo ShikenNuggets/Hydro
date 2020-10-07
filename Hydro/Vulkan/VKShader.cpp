@@ -6,8 +6,8 @@
 
 using namespace Hydro;
 
-VKShader::VKShader(VkDevice device_, const std::string& vertFile, const std::string& fragFile) : device(device_), vert(VK_NULL_HANDLE), frag(VK_NULL_HANDLE){
-	_ASSERT(device != VK_NULL_HANDLE);
+VKShader::VKShader(vk::Device device_, const std::string& vertFile, const std::string& fragFile) : device(device_), vert(nullptr), frag(nullptr){
+	_ASSERT(device);
 	_ASSERT(!vertFile.empty());
 	_ASSERT(!fragFile.empty());
 
@@ -23,16 +23,14 @@ VKShader::~VKShader(){
 	vkDestroyShaderModule(device, vert, nullptr);
 }
 
-VkShaderModule VKShader::CreateShaderModule(const std::vector<char>& code){
-	VkShaderModuleCreateInfo createInfo{};
-	createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
+vk::ShaderModule VKShader::CreateShaderModule(const std::vector<char>& code){
+	vk::ShaderModuleCreateInfo createInfo{ vk::ShaderModuleCreateFlags() };
 	createInfo.codeSize = code.size();
 	createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data()); //This is gross
 
-	VkShaderModule shaderModule;
-	if(vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS){
-		throw std::runtime_error("Failed to create shader module!");
+	try{
+		return device.createShaderModule(createInfo);
+	}catch(vk::SystemError err){
+		throw std::runtime_error("Failed to create shader module! VK Error: " + std::string(err.what()));
 	}
-
-	return shaderModule;
 }

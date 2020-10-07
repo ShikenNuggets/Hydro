@@ -5,7 +5,7 @@
 #include <optional>
 #include <vector>
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 
 #include "FileSystem.h"
 #include "VKVertex.h"
@@ -25,9 +25,9 @@ namespace Hydro{
 	struct SwapChainSupportDetails{
 		SwapChainSupportDetails() : capabilities(), formats(), presentModes(){}
 
-		VkSurfaceCapabilitiesKHR capabilities;
-		std::vector<VkSurfaceFormatKHR> formats;
-		std::vector<VkPresentModeKHR> presentModes;
+		vk::SurfaceCapabilitiesKHR capabilities;
+		std::vector<vk::SurfaceFormatKHR> formats;
+		std::vector<vk::PresentModeKHR> presentModes;
 	};
 
 	struct UniformBufferObject{
@@ -49,53 +49,53 @@ namespace Hydro{
 
 	private:
 		Window* window;
-		VkInstance instance;
+		vk::UniqueInstance instance;
 		VkDebugUtilsMessengerEXT debugMessenger;
-		VkPhysicalDevice physicalDevice;
-		VkDevice device;
-		VkQueue graphicsQueue;
-		VkQueue presentQueue;
-		VkSurfaceKHR surface;
-		VkSwapchainKHR swapChain;
-		std::vector<VkImage> swapChainImages;
-		VkFormat swapChainImageFormat;
-		VkExtent2D swapChainExtent;
-		std::vector<VkImageView> swapChainImageViews;
-		std::vector<VkFramebuffer> swapChainFramebuffers;
-		VkRenderPass renderPass;
-		VkDescriptorSetLayout descriptorSetLayout;
-		VkPipelineLayout pipelineLayout;
-		VkPipeline graphicsPipeline;
-		VkCommandPool commandPool;
-		std::vector<VkCommandBuffer> commandBuffers;
-		std::vector<VkSemaphore> imageAvailableSemaphores;
-		std::vector<VkSemaphore> renderFinishedSemaphores;
-		std::vector<VkFence> inFlightFences;
-		std::vector<VkFence> imagesInFlight;
+		vk::PhysicalDevice physicalDevice;
+		vk::UniqueDevice device;
+		vk::Queue graphicsQueue;
+		vk::Queue presentQueue;
+		vk::SurfaceKHR surface;
+		vk::SwapchainKHR swapChain;
+		std::vector<vk::Image> swapChainImages;
+		vk::Format swapChainImageFormat;
+		vk::Extent2D swapChainExtent;
+		std::vector<vk::ImageView> swapChainImageViews;
+		std::vector<vk::Framebuffer> swapChainFramebuffers;
+		vk::RenderPass renderPass;
+		vk::DescriptorSetLayout descriptorSetLayout;
+		vk::PipelineLayout pipelineLayout;
+		vk::Pipeline graphicsPipeline;
+		vk::CommandPool commandPool;
+		std::vector<vk::CommandBuffer> commandBuffers;
+		std::vector<vk::Semaphore> imageAvailableSemaphores;
+		std::vector<vk::Semaphore> renderFinishedSemaphores;
+		std::vector<vk::Fence> inFlightFences;
+		std::vector<vk::Fence> imagesInFlight;
 		size_t currentFrame;
 		static volatile bool windowResized; //TODO - This is a hack
 		std::vector<VKVertex> vertices;
 		std::vector<uint32_t> indices;
-		VkBuffer vertexBuffer;
-		VkDeviceMemory vertexBufferMemory;
-		VkBuffer indexBuffer;
-		VkDeviceMemory indexBufferMemory;
-		std::vector<VkBuffer> uniformBuffers;
-		std::vector<VkDeviceMemory> uniformBuffersMemory;
-		VkDescriptorPool descriptorPool;
-		std::vector<VkDescriptorSet> descriptorSets;
+		vk::Buffer vertexBuffer;
+		vk::DeviceMemory vertexBufferMemory;
+		vk::Buffer indexBuffer;
+		vk::DeviceMemory indexBufferMemory;
+		std::vector<vk::Buffer> uniformBuffers;
+		std::vector<vk::DeviceMemory> uniformBuffersMemory;
+		vk::DescriptorPool descriptorPool;
+		std::vector<vk::DescriptorSet> descriptorSets;
 		uint32_t mipLevels;
-		VkImage textureImage;
-		VkDeviceMemory textureImageMemory;
-		VkImageView textureImageView;
-		VkSampler textureSampler;
-		VkImage depthImage;
-		VkDeviceMemory depthImageMemory;
-		VkImageView depthImageView;
-		VkSampleCountFlagBits msaaSamples;
-		VkImage colorImage;
-		VkDeviceMemory colorImageMemory;
-		VkImageView colorImageView;
+		vk::Image textureImage;
+		vk::DeviceMemory textureImageMemory;
+		vk::ImageView textureImageView;
+		vk::Sampler textureSampler;
+		vk::Image depthImage;
+		vk::DeviceMemory depthImageMemory;
+		vk::ImageView depthImageView;
+		vk::SampleCountFlagBits msaaSamples;
+		vk::Image colorImage;
+		vk::DeviceMemory colorImageMemory;
+		vk::ImageView colorImageView;
 
 		static constexpr int MAX_FRAMES_IN_FLIGHT = 3;
 		static const std::vector<const char*> validationLayers;
@@ -116,14 +116,14 @@ namespace Hydro{
 		void CreateCommandPool();
 		void CreateColorResources();
 		void CreateDepthResources();
-		void CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels_, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
-		VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels_);
-		void GenerateMipmaps(VkImage image, VkFormat imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels_);
+		void CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels_, vk::SampleCountFlagBits numSamples, vk::Format format, vk::ImageTiling tiling, vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Image& image, vk::DeviceMemory& imageMemory);
+		vk::ImageView CreateImageView(vk::Image image, vk::Format format, vk::ImageAspectFlags aspectFlags, uint32_t mipLevels_);
+		void GenerateMipmaps(vk::Image image, vk::Format imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels_);
 		void CreateTextureImage();
 		void CreateTextureImageView();
 		void CreateTextureSampler();
-		void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-		void CopyBuffer(VkBuffer sourceBuffer, VkBuffer destBuffer, VkDeviceSize size);
+		void CreateBuffer(vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Buffer& buffer, vk::DeviceMemory& bufferMemory);
+		void CopyBuffer(vk::Buffer sourceBuffer, vk::Buffer destBuffer, vk::DeviceSize size);
 		void LoadModel();
 		void CreateVertexBuffer();
 		void CreateIndexBuffer();
@@ -137,30 +137,30 @@ namespace Hydro{
 		void RecreateSwapChain();
 
 		std::vector<const char*> GetRequiredExtensions();
-		bool IsDeviceSuitable(VkPhysicalDevice device_);
-		bool DeviceSupportsExtensions(VkPhysicalDevice device_);
+		bool IsDeviceSuitable(const vk::PhysicalDevice& device_);
+		bool DeviceSupportsExtensions(const vk::PhysicalDevice& device_);
 
-		QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice device_);
-		SwapChainSupportDetails QuerySwapChainSupport(VkPhysicalDevice device_);
+		QueueFamilyIndices FindQueueFamilies(vk::PhysicalDevice device_);
+		SwapChainSupportDetails QuerySwapChainSupport(const vk::PhysicalDevice& device_);
 
-		VkSurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-		VkPresentModeKHR ChooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
-		VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+		vk::SurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats);
+		vk::PresentModeKHR ChooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes);
+		vk::Extent2D ChooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities);
 
-		uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-		VkFormat FindDepthFormat();
-		bool HasStencilComponent(VkFormat format);
+		uint32_t FindMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties);
+		vk::Format FindSupportedFormat(const std::vector<vk::Format>& candidates, vk::ImageTiling tiling, vk::FormatFeatureFlags features);
+		vk::Format FindDepthFormat();
+		bool HasStencilComponent(vk::Format format);
 
 		void UpdateUniformBuffer(uint32_t currentImage);
 
-		VkCommandBuffer BeginSingleTimeCommand();
-		void EndSingleTimeCommand(VkCommandBuffer commandBuffer);
+		vk::CommandBuffer BeginSingleTimeCommand();
+		void EndSingleTimeCommand(vk::CommandBuffer commandBuffer);
 
-		void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels_);
-		void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+		void TransitionImageLayout(vk::Image image, vk::Format format, vk::ImageLayout oldLayout, vk::ImageLayout newLayout, uint32_t mipLevels_);
+		void CopyBufferToImage(vk::Buffer buffer, vk::Image image, uint32_t width, uint32_t height);
 
-		VkSampleCountFlagBits GetMaxUsableSampleCount();
+		vk::SampleCountFlagBits GetMaxUsableSampleCount();
 
 		//Debug stuff
 		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);

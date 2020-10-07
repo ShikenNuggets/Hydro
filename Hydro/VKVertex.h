@@ -3,7 +3,7 @@
 
 #include <array>
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 
 #include "Math/Vector.h"
 
@@ -15,30 +15,30 @@ namespace Hydro{
 		Vector3 color; //TODO - Use special Color struct
 		Vector2 texCoords;
 
-		static VkVertexInputBindingDescription GetBindingDescription(){
-			VkVertexInputBindingDescription bindingDescription{};
+		static vk::VertexInputBindingDescription GetBindingDescription(){
+			vk::VertexInputBindingDescription bindingDescription{};
 			bindingDescription.binding = 0;
 			bindingDescription.stride = sizeof(VKVertex);
-			bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+			bindingDescription.inputRate = vk::VertexInputRate::eVertex;
 
 			return bindingDescription;
 		}
 
-		static std::array<VkVertexInputAttributeDescription, 3> GetAttributeDescription(){
-			std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions{};
+		static std::array<vk::VertexInputAttributeDescription, 3> GetAttributeDescription(){
+			std::array<vk::VertexInputAttributeDescription, 3> attributeDescriptions{};
 			attributeDescriptions[0].binding = 0;
 			attributeDescriptions[0].location = 0;
-			attributeDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+			attributeDescriptions[0].format = vk::Format::eR32G32B32A32Sfloat;
 			attributeDescriptions[0].offset = offsetof(VKVertex, pos);
 
 			attributeDescriptions[1].binding = 0;
 			attributeDescriptions[1].location = 1;
-			attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+			attributeDescriptions[1].format = vk::Format::eR32G32B32A32Sfloat;
 			attributeDescriptions[1].offset = offsetof(VKVertex, color);
 
 			attributeDescriptions[2].binding = 0;
 			attributeDescriptions[2].location = 2;
-			attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+			attributeDescriptions[2].format = vk::Format::eR32G32B32A32Sfloat;
 			attributeDescriptions[2].offset = offsetof(VKVertex, texCoords);
 
 			return attributeDescriptions;
