@@ -8,12 +8,12 @@
 
 using namespace Hydro;
 
-Window::Window() : window(nullptr), width(800), height(600), state(State::Hidden){
+Window::Window(int w_, int h_, const std::string& name_) : window(nullptr), width(w_), height(h_), name(name_), state(State::Hidden){
 	if(SDL_Init(SDL_INIT_EVERYTHING) > 0){
 		throw std::exception("Could not initialize SDL!");
 	}
 
-	window = SDL_CreateWindow("Hydro", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE | SDL_WINDOW_VULKAN);
+	window = SDL_CreateWindow(name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_RESIZABLE | SDL_WINDOW_VULKAN);
 	if(window == nullptr){
 		throw std::exception("Could not create Window!");
 	}

@@ -111,7 +111,8 @@
     <ClInclude Include="Math\Rect.h" />
     <ClInclude Include="Math\Sphere.h" />
     <ClInclude Include="Math\Vector.h" />
-    <ClInclude Include="VKVertex.h" />
+    <ClInclude Include="Utils.h" />
+    <ClInclude Include="Vulkan\VKVertex.h" />
     <ClInclude Include="Vulkan\VKRenderer.h" />
     <ClInclude Include="Vulkan\VKShader.h" />
     <ClInclude Include="Window.h" />

@@ -1,5 +1,6 @@
 #include "VKRenderer.h"
 
+#include "Utils.h"
 #include "VKShader.h"
 #include "VKVertex.h"
 
@@ -188,7 +189,7 @@ void VKRenderer::CreateInstance(){
 	auto extensions = GetRequiredExtensions();
 
 	auto appInfo = vk::ApplicationInfo(
-		"Hello Triangle", //TODO - Get game name
+		window->Name().c_str(),
 		VK_MAKE_VERSION(0, 0, 1), //TODO - Get game version
 		"Hydro",
 		VK_MAKE_VERSION(0, 0, 1), //TODO - Get engine version
@@ -207,7 +208,6 @@ void VKRenderer::CreateInstance(){
 		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
 		createInfo.ppEnabledLayerNames = validationLayers.data();
 
-		//TODO - Not 100% on what to do with these
 		PopulateDebugMessengerCreateInfo(debugCreateInfo);
 		createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
 	}
@@ -244,10 +244,6 @@ void VKRenderer::CreateDebugMessenger(){
 
 	VkDebugUtilsMessengerCreateInfoEXT createInfo;
 	PopulateDebugMessengerCreateInfo(createInfo);
-
-	//TODO - try/catch?
-	//TODO - this may cause linker errors
-	//instance->createDebugUtilsMessengerEXT(createInfo);
 
 	if(CreateDebugUtilsMessengerEXT(*instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS){
 		throw std::runtime_error("failed to set up debug messenger!");
@@ -841,7 +837,6 @@ void VKRenderer::CreateTextureImage(){
 
 	SDL_FreeSurface(textureSurface);
 
-	//TODO - Use imageFormat???
 	CreateImage(width, height, mipLevels, vk::SampleCountFlagBits::e1, vk::Format::eR8G8B8A8Srgb, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, vk::MemoryPropertyFlagBits::eDeviceLocal, textureImage, textureImageMemory);
 
 	TransitionImageLayout(textureImage, vk::Format::eR8G8B8A8Srgb, vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal, mipLevels);
@@ -940,7 +935,7 @@ void VKRenderer::LoadModel(){
 
 			//No vertex de-duplication... to complicated to implement for this simple example code
 			vertices.push_back(vertex);
-			indices.push_back(indices.size());
+			indices.push_back(static_cast<uint32_t>(indices.size()));
 		}
 	}
 }
@@ -1255,7 +1250,12 @@ vk::CommandBuffer VKRenderer::BeginSingleTimeCommand(){
 	allocInfo.commandPool = commandPool;
 	allocInfo.commandBufferCount = 1;
 
-	vk::CommandBuffer commandBuffer = device->allocateCommandBuffers(allocInfo)[0]; //TODO - This feels sus
+	vk::CommandBuffer commandBuffer;
+	try{
+		commandBuffer = device->allocateCommandBuffers(allocInfo)[0];
+	}catch(vk::SystemError err){
+		throw std::runtime_error("Failed to allocate command buffer! VK Error: " + std::string(err.what()));
+	}
 
 	vk::CommandBufferBeginInfo beginInfo{};
 	beginInfo.flags = vk::CommandBufferUsageFlagBits::eOneTimeSubmit;
@@ -1411,7 +1411,6 @@ QueueFamilyIndices VKRenderer::FindQueueFamilies(vk::PhysicalDevice device_){
 	int i = 0;
 	for(const auto& queueFamily : device_.getQueueFamilyProperties()){
 		if(queueFamily.queueFlags & vk::QueueFlagBits::eGraphics){
-			//TODO - Add `if(queueFamily.queueCount > 0)` ?
 			indices.graphicsFamily = i;
 		}
 
@@ -1450,13 +1449,12 @@ vk::SurfaceFormatKHR VKRenderer::ChooseSwapSurfaceFormat(const std::vector<vk::S
 }
 
 vk::PresentModeKHR VKRenderer::ChooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes){
-	for(const auto& mode : availablePresentModes){
-		if(mode == vk::PresentModeKHR::eMailbox){
-			return mode; //TODO - Should be able to do this without a loop
-			//TODO - Also check for "Immediate" mode?
-		}
+	if(Utils::Has(availablePresentModes, vk::PresentModeKHR::eMailbox)){
+		return vk::PresentModeKHR::eMailbox;
+	}else if(Utils::Has(availablePresentModes, vk::PresentModeKHR::eImmediate)){
+		return vk::PresentModeKHR::eImmediate;
 	}
-
+	
 	return vk::PresentModeKHR::eFifo; //This is guaranteed to be supported
 }
 

@@ -1,6 +1,8 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <string>
+
 #include <SDL.h>
 
 namespace Hydro{
@@ -13,7 +15,7 @@ namespace Hydro{
 			Maximized
 		};
 
-		Window();
+		Window(int w_ = 800, int h_ = 600, const std::string& name_ = "Hydro");
 		~Window();
 
 		bool HandleEvents();
@@ -21,11 +23,13 @@ namespace Hydro{
 
 		int Width() const{ return width; }
 		int Height() const{ return height; }
+		std::string Name() const{ return name; }
 		State GetState() const{ return state; }
 
 	private:
 		SDL_Window* window;
 		int width, height;
+		std::string name;
 		State state;
 
 		void HandleWindowEvent(SDL_Event e);
