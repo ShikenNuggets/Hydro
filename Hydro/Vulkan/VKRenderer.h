@@ -11,6 +11,7 @@
 #include "VKVertex.h"
 #include "Window.h"
 #include "Math/Matrix.h"
+#include "Model.h"
 
 namespace Hydro{
 	struct QueueFamilyIndices{
@@ -74,8 +75,7 @@ namespace Hydro{
 		std::vector<vk::Fence> imagesInFlight;
 		size_t currentFrame;
 		static volatile bool windowResized; //TODO - This is a hack
-		std::vector<VKVertex> vertices;
-		std::vector<uint32_t> indices;
+		Model* model;
 		vk::Buffer vertexBuffer;
 		vk::DeviceMemory vertexBufferMemory;
 		vk::Buffer indexBuffer;
@@ -124,7 +124,6 @@ namespace Hydro{
 		void CreateTextureSampler();
 		void CreateBuffer(vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Buffer& buffer, vk::DeviceMemory& bufferMemory);
 		void CopyBuffer(vk::Buffer sourceBuffer, vk::Buffer destBuffer, vk::DeviceSize size);
-		void LoadModel();
 		void CreateVertexBuffer();
 		void CreateIndexBuffer();
 		void CreateUniformBuffers();

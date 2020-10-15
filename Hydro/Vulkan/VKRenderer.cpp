@@ -1,5 +1,8 @@
 #include "VKRenderer.h"
 
+#include "App.h"
+#include "Texture.h"
+#include "ResourceMgr.h"
 #include "Utils.h"
 #include "VKShader.h"
 #include "VKVertex.h"
@@ -15,8 +18,6 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_vulkan.h>
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <tiny_obj_loader.h>
 
 using namespace Hydro;
 
@@ -29,8 +30,8 @@ const std::vector<const char*> VKRenderer::deviceExtensions = {
 	VK_NV_RAY_TRACING_EXTENSION_NAME
 };
 
-const std::string MODEL_PATH = "Resources/Models/viking_room.obj";
-const std::string TEXTURE_PATH = "Resources/Textures/viking_room.png";
+//const std::string MODEL_PATH = "Resources/Models/viking_room.obj";
+//const std::string TEXTURE_PATH = "Resources/Textures/viking_room.png";
 
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
@@ -58,7 +59,10 @@ VKRenderer::VKRenderer(Window* window_) : window(window_), instance(nullptr), de
 	CreateTextureImage();
 	CreateTextureImageView();
 	CreateTextureSampler();
-	LoadModel();
+
+	model = App::GetInstance()->GetResourceMgr()->Get<Model>("RoomModel");
+	//model = new Model(ModelLoader::Get()->LoadModel(MODEL_PATH));
+
 	CreateVertexBuffer();
 	CreateIndexBuffer();
 	CreateUniformBuffers();
@@ -809,44 +813,28 @@ void VKRenderer::GenerateMipmaps(vk::Image image, vk::Format imageFormat, int32_
 }
 
 void VKRenderer::CreateTextureImage(){
-	//TODO - Don't initialize this here lol
-	//There should be no SDL code anywhere in this class
-	auto flags = IMG_INIT_PNG | IMG_INIT_JPG;
-	if((IMG_Init(flags) & flags) != flags){
-		std::string err = IMG_GetError();
-		throw std::runtime_error("SDL_image could not initialize! SDL_image Error: " + err);
-	}
-
-	SDL_Surface* textureSurface = IMG_Load(TEXTURE_PATH.c_str());
-	if(textureSurface == NULL || textureSurface->pixels == NULL){
-		std::string err = IMG_GetError();
-		throw std::runtime_error("Could not load image! SDL_image Error: " + err);
-	}
-	uint32_t width = textureSurface->w;
-	uint32_t height = textureSurface->h;
-	vk::DeviceSize imageSize = width * height * static_cast<uint64_t>(textureSurface->format->BytesPerPixel);
-	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(width, height)))) + 1;
+	//Texture img = ImageLoader::Get()->LoadImage(TEXTURE_PATH);
+	Texture* img = App::GetInstance()->GetResourceMgr()->Get<Texture>("RoomTexture");
+	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(img->Width(), img->Height())))) + 1;
 
 	vk::Buffer stagingBuffer;
 	vk::DeviceMemory stagingBufferMemory;
-	CreateBuffer(imageSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
+	CreateBuffer(img->Size(), vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
 
-	void* data = device->mapMemory(stagingBufferMemory, 0, imageSize);
-		memcpy(data, textureSurface->pixels, static_cast<size_t>(imageSize));
+	void* data = device->mapMemory(stagingBufferMemory, 0, img->Size());
+		memcpy(data, img->Pixels(), img->Size());
 	device->unmapMemory(stagingBufferMemory);
 
-	SDL_FreeSurface(textureSurface);
-
-	CreateImage(width, height, mipLevels, vk::SampleCountFlagBits::e1, vk::Format::eR8G8B8A8Srgb, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, vk::MemoryPropertyFlagBits::eDeviceLocal, textureImage, textureImageMemory);
+	CreateImage(img->Width(), img->Height(), mipLevels, vk::SampleCountFlagBits::e1, vk::Format::eR8G8B8A8Srgb, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, vk::MemoryPropertyFlagBits::eDeviceLocal, textureImage, textureImageMemory);
 
 	TransitionImageLayout(textureImage, vk::Format::eR8G8B8A8Srgb, vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal, mipLevels);
-	CopyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(width), static_cast<uint32_t>(height));
+	CopyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(img->Width()), static_cast<uint32_t>(img->Height()));
 	//TransitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 1);
 
 	device->destroyBuffer(stagingBuffer);
 	device->freeMemory(stagingBufferMemory);
 
-	GenerateMipmaps(textureImage, vk::Format::eR8G8B8A8Srgb, width, height, mipLevels);
+	GenerateMipmaps(textureImage, vk::Format::eR8G8B8A8Srgb, img->Width(), img->Height(), mipLevels);
 }
 
 void VKRenderer::CreateTextureImageView(){
@@ -915,40 +903,17 @@ void VKRenderer::CopyBuffer(vk::Buffer sourceBuffer, vk::Buffer destBuffer, vk::
 	EndSingleTimeCommand(commandBuffer);
 }
 
-void VKRenderer::LoadModel(){
-	tinyobj::attrib_t attrib;
-	std::vector<tinyobj::shape_t> shapes;
-	std::vector<tinyobj::material_t> materials;
-	std::string warn, err;
-
-	if(!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, MODEL_PATH.c_str())){
-		throw std::runtime_error(warn + err);
-	}
-
-	for(const auto& shape : shapes){
-		for(const auto& index : shape.mesh.indices){
-			VKVertex vertex{
-				Vector3(attrib.vertices[3 * index.vertex_index + 0], attrib.vertices[3 * index.vertex_index + 1], attrib.vertices[3 * index.vertex_index + 2]),
-				Vector3(1.0f, 1.0f, 1.0f),
-				Vector2(attrib.texcoords[2 * index.texcoord_index + 0], 1.0f - attrib.texcoords[2 * index.texcoord_index + 1])
-			};
-
-			//No vertex de-duplication... to complicated to implement for this simple example code
-			vertices.push_back(vertex);
-			indices.push_back(static_cast<uint32_t>(indices.size()));
-		}
-	}
-}
-
 void VKRenderer::CreateVertexBuffer(){
-	vk::DeviceSize bufferSize = sizeof(VKVertex) * vertices.size();
+	_ASSERT(model != nullptr);
+
+	vk::DeviceSize bufferSize = sizeof(model->vertices[0]) * model->vertices.size();
 
 	vk::Buffer stagingBuffer;
 	vk::DeviceMemory stagingBufferMemory;
 	CreateBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
 
 	void* data = device->mapMemory(stagingBufferMemory, 0, bufferSize);
-		memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
+		memcpy(data, model->vertices.data(), static_cast<size_t>(bufferSize));
 	device->unmapMemory(stagingBufferMemory);
 
 	CreateBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eVertexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, vertexBuffer, vertexBufferMemory);
@@ -960,14 +925,14 @@ void VKRenderer::CreateVertexBuffer(){
 }
 
 void VKRenderer::CreateIndexBuffer(){
-	vk::DeviceSize bufferSize = sizeof(indices[0]) * indices.size();
+	vk::DeviceSize bufferSize = sizeof(model->indices[0]) * model->indices.size();
 
 	vk::Buffer stagingBuffer;
 	vk::DeviceMemory stagingBufferMemory;
 	CreateBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
 
 	void* data = device->mapMemory(stagingBufferMemory, 0, bufferSize);
-		memcpy(data, indices.data(), (size_t)bufferSize);
+		memcpy(data, model->indices.data(), (size_t)bufferSize);
 	device->unmapMemory(stagingBufferMemory);
 
 	CreateBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eIndexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, indexBuffer, indexBufferMemory);
@@ -1095,7 +1060,7 @@ void VKRenderer::CreateCommandBuffers(){
 			commandBuffers[i].bindVertexBuffers(0, 1, vertexBuffers, offsets);
 			commandBuffers[i].bindIndexBuffer(indexBuffer, 0, vk::IndexType::eUint32);
 			commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipelineLayout, 0, descriptorSets[i], nullptr);
-			commandBuffers[i].drawIndexed(static_cast<uint32_t>(indices.size()), 1, 0, 0, 0);
+			commandBuffers[i].drawIndexed(static_cast<uint32_t>(model->indices.size()), 1, 0, 0, 0);
 		commandBuffers[i].endRenderPass();
 
 		try{

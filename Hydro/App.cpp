@@ -23,14 +23,11 @@ void App::DeleteInstance(){
 }
 #endif //_DEBUG
 
-App::App(){
-	std::cout << "App startup" << std::endl;
-	window = new Window();
-	renderer = new VKRenderer(window);
+App::App() : window(nullptr), resourceMgr(nullptr), renderer(nullptr){
 }
 
 App::~App(){
-	std::cout << "App shutdown" << std::endl;
+	std::cout << "App shutdown" << std::endl; //TODO - Debug kogging
 	if(renderer != nullptr){
 		delete renderer;
 		renderer = nullptr;
@@ -42,7 +39,16 @@ App::~App(){
 	}
 }
 
+void App::Initialize(){
+	std::cout << "App startup" << std::endl; //TODO - Debug logging
+	window = new Window();
+	resourceMgr = new ResourceMgr();
+	renderer = new VKRenderer(window);
+}
+
 void App::Run(){
+	Initialize();
+
 	bool isRunning = true;
 	while(isRunning){
 		isRunning = window->HandleEvents();

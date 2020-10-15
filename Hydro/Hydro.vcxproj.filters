@@ -44,6 +44,10 @@
     <ClInclude Include="Window.h" />
     <ClInclude Include="Vulkan\VKVertex.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceMgr.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
@@ -85,5 +89,8 @@
       <Filter>Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="ResourceMgr.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
 </Project>

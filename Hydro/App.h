@@ -2,6 +2,7 @@
 #define APP_H
 
 #include "Window.h"
+#include "ResourceMgr.h"
 #include "Vulkan/VKRenderer.h"
 
 namespace Hydro{
@@ -15,14 +16,19 @@ namespace Hydro{
 
 		void Run();
 
+		ResourceMgr* GetResourceMgr(){ return resourceMgr; }
+
 	private:
 		static App* instance;
 
 		App();
 		~App();
 
+		void Initialize();
+
 		Window* window;
 		VKRenderer* renderer;
+		ResourceMgr* resourceMgr;
 	};
 }
 
