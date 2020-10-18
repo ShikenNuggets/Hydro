@@ -39,7 +39,7 @@ project "Hydro"
 	language "C++"
 	
 	targetdir ("Build/%{prj.name}/%{cfg.buildcfg}/") 
-	objdir ("Build/temp/%{prj.name}/%{cfg.buildcfg}/") 
+	objdir ("Build/temp/%{prj.name}/%{cfg.buildcfg}/")
 	
 	files
 	{

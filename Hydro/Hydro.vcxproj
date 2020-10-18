@@ -102,8 +102,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Events\Event.h" />
+    <ClInclude Include="Events\EventHandler.h" />
+    <ClInclude Include="Events\WindowEvent.h" />
     <ClInclude Include="FileSystem.h" />
-    <ClInclude Include="Texture.h" />
     <ClInclude Include="Math\Euler.h" />
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Math\Matrix.h" />
@@ -115,16 +117,17 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceMgr.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Utils.h" />
-    <ClInclude Include="Vulkan\VKVertex.h" />
     <ClInclude Include="Vulkan\VKRenderer.h" />
     <ClInclude Include="Vulkan\VKShader.h" />
+    <ClInclude Include="Vulkan\VKVertex.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Events\EventHandler.cpp" />
     <ClCompile Include="FileSystem.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Math\Euler.cpp" />
     <ClCompile Include="Math\Matrix2.cpp" />
     <ClCompile Include="Math\Matrix3.cpp" />
@@ -137,6 +140,7 @@
     <ClCompile Include="Math\Vector4.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ResourceMgr.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Vulkan\VKRenderer.cpp" />
     <ClCompile Include="Vulkan\VKShader.cpp" />
     <ClCompile Include="Window.cpp" />
