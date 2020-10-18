@@ -30,6 +30,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDL2main", "SDK\SDL2\Visual
 		{81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68} = {81CE8DAF-EBB2-4761-8E45-B71ABCCA8C68}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "assimp", "SDK\AssImp\build\code\assimp.vcxproj", "{7A0F923A-4D5E-3613-9917-DE99A084EAF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -56,6 +58,10 @@ Global
 		{DA956FD3-E142-46F2-9DD5-C78BEBB56B7A}.Debug|x64.Build.0 = Debug|x64
 		{DA956FD3-E142-46F2-9DD5-C78BEBB56B7A}.Release|x64.ActiveCfg = Release|x64
 		{DA956FD3-E142-46F2-9DD5-C78BEBB56B7A}.Release|x64.Build.0 = Release|x64
+		{7A0F923A-4D5E-3613-9917-DE99A084EAF4}.Debug|x64.ActiveCfg = Debug|x64
+		{7A0F923A-4D5E-3613-9917-DE99A084EAF4}.Debug|x64.Build.0 = Debug|x64
+		{7A0F923A-4D5E-3613-9917-DE99A084EAF4}.Release|x64.ActiveCfg = Release|x64
+		{7A0F923A-4D5E-3613-9917-DE99A084EAF4}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

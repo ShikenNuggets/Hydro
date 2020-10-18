@@ -60,7 +60,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>HYDRO_PLATFORM_WIN32;HYDRO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\Hydro;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\Hydro;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;..\SDK\AssImp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -80,6 +80,7 @@
     <PostBuildEvent>
       <Command>echo D|xcopy "$(SolutionDir)Build\SDL2\$(Configuration)\*.*" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Build\SDL2_image\$(Configuration)\*.*" "$(TargetDir)" /y /E
+echo D|xcopy "$(SolutionDir)Build\assimp\$(Configuration)\*.*" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)Resources" /y /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
