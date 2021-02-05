@@ -8,7 +8,7 @@ void Renderer::AddCamera(Camera* camera_){
 }
 
 void Renderer::AddMesh(MeshRenderer* mesh_){
-	_ASSERT(std::find(meshes.begin(), meshes.end(), mesh_) != meshes.end()); //Tried to add a camera that's already been added
+	_ASSERT(std::find(meshes.begin(), meshes.end(), mesh_) != meshes.end()); //Tried to add a mesh that's already been added
 	meshes.push_back(mesh_);
 }
 
@@ -18,6 +18,10 @@ void Renderer::RemoveCamera(Camera* camera_){
 }
 
 void Renderer::RemoveMesh(MeshRenderer* mesh_){
-	_ASSERT(std::find(meshes.begin(), meshes.end(), mesh_) != meshes.end()); //Tried to remove a camera that doesn't exist
+	_ASSERT(std::find(meshes.begin(), meshes.end(), mesh_) != meshes.end()); //Tried to remove a mesh that doesn't exist
 	meshes.remove(mesh_);
+}
+
+void Renderer::OnResize(int width, int height){
+	windowResized = true; //This gets handled later in Render
 }

@@ -1,6 +1,7 @@
 #include "Window.h"
 
-#include "Vulkan/VKRenderer.h"
+#include "App.h"
+#include "GFX/Vulkan/VKRenderer.h"
 
 #include <exception>
 
@@ -64,16 +65,17 @@ void Window::HandleWindowEvent(SDL_Event e){
 		case SDL_WINDOWEVENT_MAXIMIZED:
 			state = State::Maximized;
 			SDL_GetWindowSize(window, &width, &height);
-			VKRenderer::OnResize(width, height); //TODO - Use a proper Event system instead
+			App::GetRenderer()->OnResize(width, height);
+			App::GetRenderer()->OnResize(width, height); //TODO - Use a proper Event system instead
 			break;
 		case SDL_WINDOWEVENT_RESTORED:
 			state = State::Visible;
 			SDL_GetWindowSize(window, &width, &height);
-			VKRenderer::OnResize(width, height); //TODO - Use a proper Event system instead
+			App::GetRenderer()->OnResize(width, height); //TODO - Use a proper Event system instead
 			break;
 		case SDL_WINDOWEVENT_RESIZED:
 			SDL_GetWindowSize(window, &width, &height);
-			VKRenderer::OnResize(width, height); //TODO - Use a proper Event system instead
+			App::GetRenderer()->OnResize(width, height); //TODO - Use a proper Event system instead
 			break;
 		default:
 			break;

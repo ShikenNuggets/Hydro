@@ -17,9 +17,13 @@ namespace Hydro{
 		void RemoveCamera(Camera* camera_);
 		void RemoveMesh(MeshRenderer* mesh_);
 
-	private:
+		void OnResize(int width, int height);
+
+	protected:
 		std::list<Camera*> cameras;
 		std::list<MeshRenderer*> meshes;
+
+		volatile bool windowResized; //TODO - This is a hack
 	};
 }
 

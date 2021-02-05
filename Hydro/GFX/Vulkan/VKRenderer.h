@@ -45,8 +45,6 @@ namespace Hydro{
 
 		void Render();
 
-		static void OnResize(int width, int height);
-
 	private:
 		Window* window;
 		vk::UniqueInstance instance;
@@ -73,7 +71,6 @@ namespace Hydro{
 		std::vector<vk::Fence> inFlightFences;
 		std::vector<vk::Fence> imagesInFlight;
 		size_t currentFrame;
-		static volatile bool windowResized; //TODO - This is a hack
 		Model* model;
 		vk::Buffer vertexBuffer;
 		vk::DeviceMemory vertexBufferMemory;

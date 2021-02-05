@@ -27,7 +27,7 @@ App::App() : window(nullptr), resourceMgr(nullptr), renderer(nullptr){
 }
 
 App::~App(){
-	std::cout << "App shutdown" << std::endl; //TODO - Debug kogging
+	std::cout << "App shutdown" << std::endl; //TODO - Debug logging
 	if(renderer != nullptr){
 		delete renderer;
 		renderer = nullptr;

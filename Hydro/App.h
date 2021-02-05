@@ -3,7 +3,7 @@
 
 #include "Window.h"
 #include "ResourceMgr.h"
-#include "Vulkan/VKRenderer.h"
+#include "GFX/Vulkan/VKRenderer.h"
 
 namespace Hydro{
 	class App{

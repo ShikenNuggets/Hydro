@@ -30,16 +30,11 @@ const std::vector<const char*> VKRenderer::deviceExtensions = {
 	VK_NV_RAY_TRACING_EXTENSION_NAME
 };
 
-//const std::string MODEL_PATH = "Resources/Models/viking_room.obj";
-//const std::string TEXTURE_PATH = "Resources/Textures/viking_room.png";
-
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
 #else
 const bool enableValidationLayers = true;
 #endif
-
-volatile bool VKRenderer::windowResized = false;
 
 VKRenderer::VKRenderer(Window* window_) : window(window_), instance(nullptr), debugMessenger(nullptr), physicalDevice(nullptr), device(nullptr), graphicsQueue(nullptr), presentQueue(nullptr), surface(nullptr), swapChain(nullptr), swapChainImages(), currentFrame(0), msaaSamples(vk::SampleCountFlagBits::e1){
 	CreateInstance();
@@ -61,7 +56,6 @@ VKRenderer::VKRenderer(Window* window_) : window(window_), instance(nullptr), de
 	CreateTextureSampler();
 
 	model = App::GetInstance()->GetResourceMgr()->Get<Model>("RoomModel");
-	//model = new Model(ModelLoader::Get()->LoadModel(MODEL_PATH));
 
 	CreateVertexBuffer();
 	CreateIndexBuffer();
@@ -179,10 +173,6 @@ void VKRenderer::Render(){
 	}
 
 	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-}
-
-void VKRenderer::OnResize(int width, int height){
-	windowResized = true; //This gets handled later in Render
 }
 
 void VKRenderer::CreateInstance(){

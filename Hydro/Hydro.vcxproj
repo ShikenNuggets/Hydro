@@ -126,9 +126,9 @@
     <ClInclude Include="ResourceMgr.h" />
     <ClInclude Include="GFX\Texture.h" />
     <ClInclude Include="Utils.h" />
-    <ClInclude Include="Vulkan\VKRenderer.h" />
-    <ClInclude Include="Vulkan\VKShader.h" />
-    <ClInclude Include="Vulkan\VKVertex.h" />
+    <ClInclude Include="GFX\Vulkan\VKRenderer.h" />
+    <ClInclude Include="GFX\Vulkan\VKShader.h" />
+    <ClInclude Include="GFX\Vulkan\VKVertex.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -153,8 +153,8 @@
     <ClCompile Include="Objects\Transform.cpp" />
     <ClCompile Include="ResourceMgr.cpp" />
     <ClCompile Include="GFX\Texture.cpp" />
-    <ClCompile Include="Vulkan\VKRenderer.cpp" />
-    <ClCompile Include="Vulkan\VKShader.cpp" />
+    <ClCompile Include="GFX\Vulkan\VKRenderer.cpp" />
+    <ClCompile Include="GFX\Vulkan\VKShader.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
