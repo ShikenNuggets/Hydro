@@ -7,11 +7,10 @@
 
 #include <vulkan/vulkan.hpp>
 
-#include "FileSystem.h"
 #include "VKVertex.h"
 #include "Window.h"
-#include "Math/Matrix.h"
-#include "Model.h"
+#include "GFX/Renderer.h"
+#include "GFX/Model.h"
 
 namespace Hydro{
 	struct QueueFamilyIndices{
@@ -39,7 +38,7 @@ namespace Hydro{
 		alignas(16) Matrix4 proj;
 	};
 
-	class VKRenderer{
+	class VKRenderer : public Renderer{
 	public:
 		VKRenderer(Window* window_);
 		~VKRenderer();

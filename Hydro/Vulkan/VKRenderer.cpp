@@ -1,7 +1,7 @@
 #include "VKRenderer.h"
 
 #include "App.h"
-#include "Texture.h"
+#include "GFX/Texture.h"
 #include "ResourceMgr.h"
 #include "Utils.h"
 #include "VKShader.h"

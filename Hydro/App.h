@@ -16,7 +16,10 @@ namespace Hydro{
 
 		void Run();
 
-		ResourceMgr* GetResourceMgr(){ return resourceMgr; }
+		static int GetWindowWidth(){ if(GetInstance()->window) return GetInstance()->window->Width(); else return 0; };
+		static int GetWindowHeight(){ if(GetInstance()->window) return GetInstance()->window->Height(); else return 0; };
+		static Renderer* GetRenderer(){ return GetInstance()->renderer; }
+		static ResourceMgr* GetResourceMgr(){ return GetInstance()->resourceMgr; }
 
 	private:
 		static App* instance;
@@ -27,7 +30,7 @@ namespace Hydro{
 		void Initialize();
 
 		Window* window;
-		VKRenderer* renderer;
+		Renderer* renderer;
 		ResourceMgr* resourceMgr;
 	};
 }
