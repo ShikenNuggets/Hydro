@@ -110,6 +110,9 @@
     <ClInclude Include="GFX\MeshRenderer.h" />
     <ClInclude Include="GFX\Renderer.h" />
     <ClInclude Include="GFX\ViewportRect.h" />
+    <ClInclude Include="GFX\Vulkan\VKBuffer.h" />
+    <ClInclude Include="GFX\Vulkan\VKRenderable.h" />
+    <ClInclude Include="GFX\Vulkan\Vulkan.h" />
     <ClInclude Include="Math\Euler.h" />
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Math\Matrix.h" />
@@ -139,6 +142,9 @@
     <ClCompile Include="GFX\MeshRenderer.cpp" />
     <ClCompile Include="GFX\Renderer.cpp" />
     <ClCompile Include="GFX\ViewportRect.cpp" />
+    <ClCompile Include="GFX\Vulkan\VKBuffer.cpp" />
+    <ClCompile Include="GFX\Vulkan\VKRenderable.cpp" />
+    <ClCompile Include="GFX\Vulkan\Vulkan.cpp" />
     <ClCompile Include="Math\Euler.cpp" />
     <ClCompile Include="Math\Matrix2.cpp" />
     <ClCompile Include="Math\Matrix3.cpp" />

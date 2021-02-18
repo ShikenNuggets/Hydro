@@ -71,13 +71,7 @@ namespace Hydro{
 		std::vector<vk::Fence> inFlightFences;
 		std::vector<vk::Fence> imagesInFlight;
 		size_t currentFrame;
-		Model* model;
-		vk::Buffer vertexBuffer;
-		vk::DeviceMemory vertexBufferMemory;
-		vk::Buffer indexBuffer;
-		vk::DeviceMemory indexBufferMemory;
-		std::vector<vk::Buffer> uniformBuffers;
-		std::vector<vk::DeviceMemory> uniformBuffersMemory;
+		
 		vk::DescriptorPool descriptorPool;
 		std::vector<vk::DescriptorSet> descriptorSets;
 		uint32_t mipLevels;

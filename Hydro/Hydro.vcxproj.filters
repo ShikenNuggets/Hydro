@@ -67,6 +67,9 @@
     <ClInclude Include="GFX\Vulkan\VKVertex.h">
       <Filter>Vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="GFX\Vulkan\VKRenderable.h" />
+    <ClInclude Include="GFX\Vulkan\Vulkan.h" />
+    <ClInclude Include="GFX\Vulkan\VKBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
@@ -117,5 +120,8 @@
     <ClCompile Include="GFX\Vulkan\VKShader.cpp">
       <Filter>Vulkan</Filter>
     </ClCompile>
+    <ClCompile Include="GFX\Vulkan\VKRenderable.cpp" />
+    <ClCompile Include="GFX\Vulkan\Vulkan.cpp" />
+    <ClCompile Include="GFX\Vulkan\VKBuffer.cpp" />
   </ItemGroup>
 </Project>
