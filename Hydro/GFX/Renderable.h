@@ -1,6 +1,0 @@
-#ifndef HYDRO_RENDERABLE_H
-#define HYDRO_RENDERABLE_H
-
-
-
-#endif //!HYDRO_RENDERABLE_H
