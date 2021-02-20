@@ -3,6 +3,8 @@
 
 namespace Hydro{
 	class Component{
+	public:
+		virtual ~Component(){}
 	};
 }
 

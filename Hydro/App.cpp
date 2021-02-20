@@ -44,6 +44,8 @@ void App::Initialize(){
 	window = new Window();
 	resourceMgr = new ResourceMgr();
 	renderer = new VKRenderer(window);
+	
+	currentScene = new Scene();
 }
 
 void App::Run(){

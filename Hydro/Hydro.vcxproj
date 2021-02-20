@@ -109,7 +109,11 @@
     <ClInclude Include="GFX\Camera.h" />
     <ClInclude Include="GFX\MeshRenderer.h" />
     <ClInclude Include="GFX\Renderer.h" />
+    <ClInclude Include="GFX\RenderInfo.h" />
     <ClInclude Include="GFX\ViewportRect.h" />
+    <ClInclude Include="GFX\Vulkan\LowLevel\VKBuffer.h" />
+    <ClInclude Include="GFX\Vulkan\LowLevel\VKImage.h" />
+    <ClInclude Include="GFX\Vulkan\VKRenderInfo.h" />
     <ClInclude Include="Math\Euler.h" />
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Math\Matrix.h" />
@@ -125,6 +129,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceMgr.h" />
     <ClInclude Include="GFX\Texture.h" />
+    <ClInclude Include="Scenes\Scene.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="GFX\Vulkan\VKRenderer.h" />
     <ClInclude Include="GFX\Vulkan\VKShader.h" />
@@ -139,6 +144,9 @@
     <ClCompile Include="GFX\MeshRenderer.cpp" />
     <ClCompile Include="GFX\Renderer.cpp" />
     <ClCompile Include="GFX\ViewportRect.cpp" />
+    <ClCompile Include="GFX\Vulkan\LowLevel\VKBuffer.cpp" />
+    <ClCompile Include="GFX\Vulkan\LowLevel\VKImage.cpp" />
+    <ClCompile Include="GFX\Vulkan\VKRenderInfo.cpp" />
     <ClCompile Include="Math\Euler.cpp" />
     <ClCompile Include="Math\Matrix2.cpp" />
     <ClCompile Include="Math\Matrix3.cpp" />

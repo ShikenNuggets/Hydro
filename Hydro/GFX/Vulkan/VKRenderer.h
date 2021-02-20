@@ -11,6 +11,9 @@
 #include "Window.h"
 #include "GFX/Renderer.h"
 #include "GFX/Model.h"
+#include "GFX/Vulkan/VKRenderInfo.h"
+#include "GFX/Vulkan/LowLevel/VKBuffer.h"
+#include "GFX/Vulkan/LowLevel/VKImage.h"
 
 namespace Hydro{
 	struct QueueFamilyIndices{
@@ -45,7 +48,14 @@ namespace Hydro{
 
 		void Render();
 
+		static uint32_t FindMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties);
+
+	protected:
+		virtual void CreateRenderInfo(MeshRenderer* mesh_) override;
+
 	private:
+		VKRenderInfo* Test_GetObjectRenderInfo();
+
 		Window* window;
 		vk::UniqueInstance instance;
 		VkDebugUtilsMessengerEXT debugMessenger;
@@ -71,31 +81,18 @@ namespace Hydro{
 		std::vector<vk::Fence> inFlightFences;
 		std::vector<vk::Fence> imagesInFlight;
 		size_t currentFrame;
-		Model* model;
-		vk::Buffer vertexBuffer;
-		vk::DeviceMemory vertexBufferMemory;
-		vk::Buffer indexBuffer;
-		vk::DeviceMemory indexBufferMemory;
-		std::vector<vk::Buffer> uniformBuffers;
-		std::vector<vk::DeviceMemory> uniformBuffersMemory;
+		std::vector<VKBuffer*> uniformBuffers;
 		vk::DescriptorPool descriptorPool;
 		std::vector<vk::DescriptorSet> descriptorSets;
 		uint32_t mipLevels;
-		vk::Image textureImage;
-		vk::DeviceMemory textureImageMemory;
-		vk::ImageView textureImageView;
-		vk::Sampler textureSampler;
-		vk::Image depthImage;
-		vk::DeviceMemory depthImageMemory;
-		vk::ImageView depthImageView;
+		VKImage* depthImage;
 		vk::SampleCountFlagBits msaaSamples;
-		vk::Image colorImage;
-		vk::DeviceMemory colorImageMemory;
-		vk::ImageView colorImageView;
+		VKImage* colorImage;
 
 		static constexpr int MAX_FRAMES_IN_FLIGHT = 3;
 		static const std::vector<const char*> validationLayers;
 		static const std::vector<const char*> deviceExtensions;
+		static vk::PhysicalDeviceMemoryProperties memoryProperties;
 
 		void CreateInstance();
 		bool CheckValidationLayerSupport();
@@ -112,16 +109,14 @@ namespace Hydro{
 		void CreateCommandPool();
 		void CreateColorResources();
 		void CreateDepthResources();
-		void CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels_, vk::SampleCountFlagBits numSamples, vk::Format format, vk::ImageTiling tiling, vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Image& image, vk::DeviceMemory& imageMemory);
+		//void CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels_, vk::SampleCountFlagBits numSamples, vk::Format format, vk::ImageTiling tiling, vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Image& image, vk::DeviceMemory& imageMemory);
 		vk::ImageView CreateImageView(vk::Image image, vk::Format format, vk::ImageAspectFlags aspectFlags, uint32_t mipLevels_);
-		void GenerateMipmaps(vk::Image image, vk::Format imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels_);
-		void CreateTextureImage();
-		void CreateTextureImageView();
-		void CreateTextureSampler();
-		void CreateBuffer(vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Buffer& buffer, vk::DeviceMemory& bufferMemory);
-		void CopyBuffer(vk::Buffer sourceBuffer, vk::Buffer destBuffer, vk::DeviceSize size);
-		void CreateVertexBuffer();
-		void CreateIndexBuffer();
+		void GenerateMipmaps(VKImage* image, vk::Format imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels_);
+		VKImage* CreateTextureImage(Texture* texture_);
+		vk::Sampler CreateTextureSampler();
+		void CopyBuffer(VKBuffer* sourceBuffer, VKBuffer* destBuffer, vk::DeviceSize size);
+		VKBuffer* CreateVertexBuffer(const std::vector<VKVertex>& vertices_);
+		VKBuffer* CreateIndexBuffer(const std::vector<uint32_t>& indices_);
 		void CreateUniformBuffers();
 		void CreateDescriptorPool();
 		void CreateDescriptorSets();
@@ -142,7 +137,6 @@ namespace Hydro{
 		vk::PresentModeKHR ChooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes);
 		vk::Extent2D ChooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities);
 
-		uint32_t FindMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties);
 		vk::Format FindSupportedFormat(const std::vector<vk::Format>& candidates, vk::ImageTiling tiling, vk::FormatFeatureFlags features);
 		vk::Format FindDepthFormat();
 		bool HasStencilComponent(vk::Format format);
@@ -152,8 +146,8 @@ namespace Hydro{
 		vk::CommandBuffer BeginSingleTimeCommand();
 		void EndSingleTimeCommand(vk::CommandBuffer commandBuffer);
 
-		void TransitionImageLayout(vk::Image image, vk::Format format, vk::ImageLayout oldLayout, vk::ImageLayout newLayout, uint32_t mipLevels_);
-		void CopyBufferToImage(vk::Buffer buffer, vk::Image image, uint32_t width, uint32_t height);
+		void TransitionImageLayout(VKImage* image, vk::Format format, vk::ImageLayout oldLayout, vk::ImageLayout newLayout, uint32_t mipLevels_);
+		void CopyBufferToImage(VKBuffer* buffer, VKImage* image, uint32_t width, uint32_t height);
 
 		vk::SampleCountFlagBits GetMaxUsableSampleCount();
 

@@ -3,13 +3,15 @@
 using namespace Hydro;
 
 void Renderer::AddCamera(Camera* camera_){
-	_ASSERT(std::find(cameras.begin(), cameras.end(), camera_) != cameras.end()); //Tried to add a camera that's already been added
+	_ASSERT(std::find(cameras.begin(), cameras.end(), camera_) == cameras.end()); //Tried to add a camera that's already been added
 	cameras.push_back(camera_);
 }
 
 void Renderer::AddMesh(MeshRenderer* mesh_){
-	_ASSERT(std::find(meshes.begin(), meshes.end(), mesh_) != meshes.end()); //Tried to add a mesh that's already been added
+	_ASSERT(std::find(meshes.begin(), meshes.end(), mesh_) == meshes.end()); //Tried to add a mesh that's already been added
 	meshes.push_back(mesh_);
+	
+	CreateRenderInfo(mesh_);
 }
 
 void Renderer::RemoveCamera(Camera* camera_){

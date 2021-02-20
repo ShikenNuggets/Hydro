@@ -4,6 +4,7 @@
 #include "Window.h"
 #include "ResourceMgr.h"
 #include "GFX/Vulkan/VKRenderer.h"
+#include "Scenes/Scene.h"
 
 namespace Hydro{
 	class App{
@@ -21,6 +22,8 @@ namespace Hydro{
 		static Renderer* GetRenderer(){ return GetInstance()->renderer; }
 		static ResourceMgr* GetResourceMgr(){ return GetInstance()->resourceMgr; }
 
+		static Scene* CurrentScene(){ return GetInstance()->currentScene; }
+
 	private:
 		static App* instance;
 
@@ -32,6 +35,7 @@ namespace Hydro{
 		Window* window;
 		Renderer* renderer;
 		ResourceMgr* resourceMgr;
+		Scene* currentScene;
 	};
 }
 

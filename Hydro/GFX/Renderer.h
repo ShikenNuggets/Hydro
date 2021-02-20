@@ -24,6 +24,8 @@ namespace Hydro{
 		std::list<MeshRenderer*> meshes;
 
 		volatile bool windowResized; //TODO - This is a hack
+
+		virtual void CreateRenderInfo(MeshRenderer* mesh_){}
 	};
 }
 

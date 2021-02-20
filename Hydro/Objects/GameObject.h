@@ -12,9 +12,12 @@
 namespace Hydro{
 	class GameObject{
 	public:
-		//TODO - TEMP
-		GameObject(){
-			components.push_back(new MeshRenderer("RoomModel", "RoomTexture"));
+		GameObject() : transform(), components(){
+		}
+
+		void AddComponent(Component* comp_){
+			_ASSERT(comp_ != nullptr);
+			components.push_back(comp_);
 		}
 
 		template <class T> T* GetComponent(){

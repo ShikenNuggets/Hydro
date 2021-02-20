@@ -6,6 +6,7 @@
 #include "Utils.h"
 #include "VKShader.h"
 #include "VKVertex.h"
+#include "VKRenderInfo.h"
 
 #include <algorithm>
 #include <chrono>
@@ -30,6 +31,8 @@ const std::vector<const char*> VKRenderer::deviceExtensions = {
 	VK_NV_RAY_TRACING_EXTENSION_NAME
 };
 
+vk::PhysicalDeviceMemoryProperties VKRenderer::memoryProperties;
+
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
 #else
@@ -51,19 +54,17 @@ VKRenderer::VKRenderer(Window* window_) : window(window_), instance(nullptr), de
 	CreateColorResources();
 	CreateDepthResources();
 	CreateFramebuffers();
-	CreateTextureImage();
-	CreateTextureImageView();
-	CreateTextureSampler();
+	//CreateTextureImage();
+	//CreateTextureSampler();
 
-	model = App::GetInstance()->GetResourceMgr()->Get<Model>("RoomModel");
+	//CreateVertexBuffer();
+	//CreateIndexBuffer();
 
-	CreateVertexBuffer();
-	CreateIndexBuffer();
-	CreateUniformBuffers();
+	/*CreateUniformBuffers();
 	CreateDescriptorPool();
 	CreateDescriptorSets();
 	CreateCommandBuffers();
-	CreateSyncObjects();
+	CreateSyncObjects();*/
 }
 
 VKRenderer::~VKRenderer(){
@@ -71,18 +72,12 @@ VKRenderer::~VKRenderer(){
 
 	CleanupSwapChain();
 
-	device->destroySampler(textureSampler);
-	device->destroyImageView(textureImageView);
-	device->destroyImage(textureImage);
-	device->freeMemory(textureImageMemory);
+	//device->destroySampler(textureSampler);
+	//device->destroyImageView(textureImageView);
+	//device->destroyImage(textureImage);
+	//device->freeMemory(textureImageMemory);
 
 	device->destroyDescriptorSetLayout(descriptorSetLayout);
-
-	device->destroyBuffer(indexBuffer);
-	device->freeMemory(indexBufferMemory);
-
-	device->destroyBuffer(vertexBuffer);
-	device->freeMemory(vertexBufferMemory);
 
 	for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++){
 		device->destroySemaphore(renderFinishedSemaphores[i]);
@@ -173,6 +168,17 @@ void VKRenderer::Render(){
 	}
 
 	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+}
+
+void VKRenderer::CreateRenderInfo(MeshRenderer* mesh_){
+	_ASSERT(mesh_ != nullptr);
+	mesh_->SetRenderInfo(new VKRenderInfo(mesh_->GetModel(), mesh_->GetTexture(), device.get(), CreateVertexBuffer(mesh_->GetModel()->vertices), CreateIndexBuffer(mesh_->GetModel()->indices), CreateTextureImage(mesh_->texture)));
+
+	CreateUniformBuffers();
+	CreateDescriptorPool();
+	CreateDescriptorSets();
+	CreateCommandBuffers();
+	CreateSyncObjects();
 }
 
 void VKRenderer::CreateInstance(){
@@ -271,6 +277,8 @@ void VKRenderer::SelectPhysicalDevice(){
 	if(!physicalDevice){
 		throw std::exception("Failed to find GPUs with Vulkan support!");
 	}
+
+	memoryProperties = physicalDevice.getMemoryProperties();
 }
 
 void VKRenderer::CreateLogicalDevice(){
@@ -626,8 +634,8 @@ void VKRenderer::CreateFramebuffers(){
 
 	for(size_t i = 0; i < swapChainImageViews.size(); i++){
 		std::array<vk::ImageView, 3> attachments = {
-			colorImageView,
-			depthImageView,
+			colorImage->imageView,
+			depthImage->imageView,
 			swapChainImageViews[i]
 		};
 
@@ -661,55 +669,53 @@ void VKRenderer::CreateCommandPool(){
 }
 
 void VKRenderer::CreateColorResources(){
-	vk::Format colorFormat = swapChainImageFormat;
-	CreateImage(swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, colorFormat, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eTransientAttachment | vk::ImageUsageFlagBits::eColorAttachment, vk::MemoryPropertyFlagBits::eDeviceLocal, colorImage, colorImageMemory);
-	colorImageView = CreateImageView(colorImage, colorFormat, vk::ImageAspectFlagBits::eColor, 1);
+	colorImage = new VKImage(device.get(), swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, swapChainImageFormat, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eTransientAttachment | vk::ImageUsageFlagBits::eColorAttachment, vk::MemoryPropertyFlagBits::eDeviceLocal);
+	colorImage->imageView = CreateImageView(colorImage->image, swapChainImageFormat, vk::ImageAspectFlagBits::eColor, 1); //TODO - There has to be a better way to create image views for these
 }
 
 void VKRenderer::CreateDepthResources(){
 	vk::Format depthFormat = FindDepthFormat();
-
-	CreateImage(swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, depthFormat, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eDepthStencilAttachment, vk::MemoryPropertyFlagBits::eDeviceLocal, depthImage, depthImageMemory);
-	depthImageView = CreateImageView(depthImage, depthFormat, vk::ImageAspectFlagBits::eDepth, 1);
+	depthImage = new VKImage(device.get(), swapChainExtent.width, swapChainExtent.height, 1, msaaSamples, depthFormat, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eDepthStencilAttachment, vk::MemoryPropertyFlagBits::eDeviceLocal);
+	depthImage->imageView = CreateImageView(depthImage->image, depthFormat, vk::ImageAspectFlagBits::eDepth, 1);
 
 	TransitionImageLayout(depthImage, depthFormat, vk::ImageLayout::eUndefined, vk::ImageLayout::eDepthStencilAttachmentOptimal, 1);
 }
 
-void VKRenderer::CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels_, vk::SampleCountFlagBits numSamples, vk::Format format, vk::ImageTiling tiling, vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Image& image, vk::DeviceMemory& imageMemory){
-	vk::ImageCreateInfo imageInfo{};
-	imageInfo.imageType = vk::ImageType::e2D;
-	imageInfo.extent.width = width;
-	imageInfo.extent.height = height;
-	imageInfo.extent.depth = 1;
-	imageInfo.mipLevels = mipLevels_;
-	imageInfo.arrayLayers = 1;
-	imageInfo.format = format;
-	imageInfo.tiling = tiling;
-	imageInfo.initialLayout = vk::ImageLayout::eUndefined;
-	imageInfo.usage = usage;
-	imageInfo.samples = numSamples;
-	imageInfo.sharingMode = vk::SharingMode::eExclusive;
-
-	try{
-		image = device->createImage(imageInfo);
-	}catch(vk::SystemError err){
-		throw std::runtime_error("Failed to create image! VK Error: " + std::string(err.what()));
-	}
-
-	vk::MemoryRequirements memRequirements = device->getImageMemoryRequirements(image);
-
-	vk::MemoryAllocateInfo allocInfo{};
-	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties);
-
-	try{
-		imageMemory = device->allocateMemory(allocInfo);
-	}catch(vk::SystemError err){
-		throw std::runtime_error("Failed to allocate image memory! VK Error: " + std::string(err.what()));
-	}
-
-	device->bindImageMemory(image, imageMemory, 0);
-}
+//void VKRenderer::CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels_, vk::SampleCountFlagBits numSamples, vk::Format format, vk::ImageTiling tiling, vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Image& image, vk::DeviceMemory& imageMemory){
+//	vk::ImageCreateInfo imageInfo{};
+//	imageInfo.imageType = vk::ImageType::e2D;
+//	imageInfo.extent.width = width;
+//	imageInfo.extent.height = height;
+//	imageInfo.extent.depth = 1;
+//	imageInfo.mipLevels = mipLevels_;
+//	imageInfo.arrayLayers = 1;
+//	imageInfo.format = format;
+//	imageInfo.tiling = tiling;
+//	imageInfo.initialLayout = vk::ImageLayout::eUndefined;
+//	imageInfo.usage = usage;
+//	imageInfo.samples = numSamples;
+//	imageInfo.sharingMode = vk::SharingMode::eExclusive;
+//
+//	try{
+//		image = device->createImage(imageInfo);
+//	}catch(vk::SystemError err){
+//		throw std::runtime_error("Failed to create image! VK Error: " + std::string(err.what()));
+//	}
+//
+//	vk::MemoryRequirements memRequirements = device->getImageMemoryRequirements(image);
+//
+//	vk::MemoryAllocateInfo allocInfo{};
+//	allocInfo.allocationSize = memRequirements.size;
+//	allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties);
+//
+//	try{
+//		imageMemory = device->allocateMemory(allocInfo);
+//	}catch(vk::SystemError err){
+//		throw std::runtime_error("Failed to allocate image memory! VK Error: " + std::string(err.what()));
+//	}
+//
+//	device->bindImageMemory(image, imageMemory, 0);
+//}
 
 vk::ImageView VKRenderer::CreateImageView(vk::Image image, vk::Format format, vk::ImageAspectFlags aspectFlags, uint32_t mipLevels_){
 	auto createInfo = vk::ImageViewCreateInfo();
@@ -733,7 +739,7 @@ vk::ImageView VKRenderer::CreateImageView(vk::Image image, vk::Format format, vk
 	}
 }
 
-void VKRenderer::GenerateMipmaps(vk::Image image, vk::Format imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels_){
+void VKRenderer::GenerateMipmaps(VKImage* image, vk::Format imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels_){
 	//Check if image format supports linear blitting
 	vk::FormatProperties formatProperties = physicalDevice.getFormatProperties(imageFormat);
 
@@ -744,7 +750,7 @@ void VKRenderer::GenerateMipmaps(vk::Image image, vk::Format imageFormat, int32_
 	vk::CommandBuffer commandBuffer = BeginSingleTimeCommand();
 
 	vk::ImageMemoryBarrier barrier{};
-	barrier.image = image;
+	barrier.image = image->image;
 	barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	barrier.subresourceRange.aspectMask = vk::ImageAspectFlagBits::eColor;
@@ -778,7 +784,7 @@ void VKRenderer::GenerateMipmaps(vk::Image image, vk::Format imageFormat, int32_
 		blit.dstSubresource.baseArrayLayer = 0;
 		blit.dstSubresource.layerCount = 1;
 
-		commandBuffer.blitImage(image, vk::ImageLayout::eTransferSrcOptimal, image, vk::ImageLayout::eTransferDstOptimal, blit, vk::Filter::eLinear);
+		commandBuffer.blitImage(image->image, vk::ImageLayout::eTransferSrcOptimal, image->image, vk::ImageLayout::eTransferDstOptimal, blit, vk::Filter::eLinear);
 
 		barrier.oldLayout = vk::ImageLayout::eTransferSrcOptimal;
 		barrier.newLayout = vk::ImageLayout::eShaderReadOnlyOptimal;
@@ -802,36 +808,27 @@ void VKRenderer::GenerateMipmaps(vk::Image image, vk::Format imageFormat, int32_
 	EndSingleTimeCommand(commandBuffer);
 }
 
-void VKRenderer::CreateTextureImage(){
-	//Texture img = ImageLoader::Get()->LoadImage(TEXTURE_PATH);
-	Texture* img = App::GetInstance()->GetResourceMgr()->Get<Texture>("RoomTexture");
-	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(img->Width(), img->Height())))) + 1;
+VKImage* VKRenderer::CreateTextureImage(Texture* texture_){
+	_ASSERT(texture_ != nullptr);
 
-	vk::Buffer stagingBuffer;
-	vk::DeviceMemory stagingBufferMemory;
-	CreateBuffer(img->Size(), vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
+	mipLevels = static_cast<uint32_t>(std::floor(std::log2(std::max(texture_->Width(), texture_->Height())))) + 1;
+	VKBuffer stagingBuffer = VKBuffer(device.get(), texture_->Size(), vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent);
+	stagingBuffer.MapMemory(texture_->Pixels(), texture_->Size());
 
-	void* data = device->mapMemory(stagingBufferMemory, 0, img->Size());
-		memcpy(data, img->Pixels(), img->Size());
-	device->unmapMemory(stagingBufferMemory);
-
-	CreateImage(img->Width(), img->Height(), mipLevels, vk::SampleCountFlagBits::e1, vk::Format::eR8G8B8A8Srgb, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, vk::MemoryPropertyFlagBits::eDeviceLocal, textureImage, textureImageMemory);
+	VKImage* textureImage = new VKImage(device.get(), texture_->Width(), texture_->Height(), mipLevels, vk::SampleCountFlagBits::e1, vk::Format::eR8G8B8A8Srgb, vk::ImageTiling::eOptimal, vk::ImageUsageFlagBits::eTransferSrc | vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled, vk::MemoryPropertyFlagBits::eDeviceLocal);
 
 	TransitionImageLayout(textureImage, vk::Format::eR8G8B8A8Srgb, vk::ImageLayout::eUndefined, vk::ImageLayout::eTransferDstOptimal, mipLevels);
-	CopyBufferToImage(stagingBuffer, textureImage, static_cast<uint32_t>(img->Width()), static_cast<uint32_t>(img->Height()));
-	//TransitionImageLayout(textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, 1);
+	CopyBufferToImage(&stagingBuffer, textureImage, static_cast<uint32_t>(texture_->Width()), static_cast<uint32_t>(texture_->Height()));
 
-	device->destroyBuffer(stagingBuffer);
-	device->freeMemory(stagingBufferMemory);
+	GenerateMipmaps(textureImage, vk::Format::eR8G8B8A8Srgb, texture_->Width(), texture_->Height(), mipLevels);
 
-	GenerateMipmaps(textureImage, vk::Format::eR8G8B8A8Srgb, img->Width(), img->Height(), mipLevels);
+	textureImage->imageView = CreateImageView(textureImage->image, vk::Format::eR8G8B8A8Srgb, vk::ImageAspectFlagBits::eColor, mipLevels);
+	textureImage->sampler = CreateTextureSampler();
+
+	return textureImage;
 }
 
-void VKRenderer::CreateTextureImageView(){
-	textureImageView = CreateImageView(textureImage, vk::Format::eR8G8B8A8Srgb, vk::ImageAspectFlagBits::eColor, mipLevels);
-}
-
-void VKRenderer::CreateTextureSampler(){
+vk::Sampler VKRenderer::CreateTextureSampler(){
 	vk::SamplerCreateInfo samplerInfo{};
 	samplerInfo.magFilter = vk::Filter::eLinear;
 	samplerInfo.minFilter = vk::Filter::eLinear;
@@ -850,97 +847,54 @@ void VKRenderer::CreateTextureSampler(){
 	samplerInfo.maxLod = static_cast<float>(mipLevels);
 
 	try{
-		textureSampler = device->createSampler(samplerInfo);
+		return device->createSampler(samplerInfo);
 	}catch(vk::SystemError err){
 		throw std::runtime_error("Failed to create texture sampler! VK Error: " + std::string(err.what()));
 	}
 }
 
-void VKRenderer::CreateBuffer(vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Buffer& buffer, vk::DeviceMemory& bufferMemory){
-	vk::BufferCreateInfo bufferInfo{};
-	bufferInfo.size = size;
-	bufferInfo.usage = usage;
-	bufferInfo.sharingMode = vk::SharingMode::eExclusive;
+void VKRenderer::CopyBuffer(VKBuffer* sourceBuffer, VKBuffer* destBuffer, vk::DeviceSize size){
+	_ASSERT(sourceBuffer != nullptr);
+	_ASSERT(destBuffer != nullptr);
 
-	try{
-		buffer = device->createBuffer(bufferInfo);
-	}catch(vk::SystemError err){
-		throw std::runtime_error("Failed to create vertex buffer! VK Error: " + std::string(err.what()));
-	}
-
-	vk::MemoryRequirements memRequirements = device->getBufferMemoryRequirements(buffer);
-
-	vk::MemoryAllocateInfo allocInfo{};
-	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties);
-
-	try{
-		bufferMemory = device->allocateMemory(allocInfo);
-	}catch(vk::SystemError err){
-		throw std::runtime_error("Failed to allocate vertex buffer memory! VK Error: " + std::string(err.what()));
-	}
-	
-	device->bindBufferMemory(buffer, bufferMemory, 0);
-}
-
-void VKRenderer::CopyBuffer(vk::Buffer sourceBuffer, vk::Buffer destBuffer, vk::DeviceSize size){
 	vk::CommandBuffer commandBuffer = BeginSingleTimeCommand();
 
 	vk::BufferCopy copyRegion{};
 	copyRegion.size = size;
-	commandBuffer.copyBuffer(sourceBuffer, destBuffer, copyRegion);
+	commandBuffer.copyBuffer(sourceBuffer->buffer, destBuffer->buffer, copyRegion);
 
 	EndSingleTimeCommand(commandBuffer);
 }
 
-void VKRenderer::CreateVertexBuffer(){
-	_ASSERT(model != nullptr);
+VKBuffer* VKRenderer::CreateVertexBuffer(const std::vector<VKVertex>& vertices_){
+	vk::DeviceSize bufferSize = sizeof(vertices_[0]) * vertices_.size();
+	VKBuffer stagingBuffer = VKBuffer(device.get(), bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent);
+	stagingBuffer.MapMemory(vertices_.data(), bufferSize);
 
-	vk::DeviceSize bufferSize = sizeof(model->vertices[0]) * model->vertices.size();
+	VKBuffer* vertexBuffer = new VKBuffer(device.get(), bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eVertexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal);
+	CopyBuffer(&stagingBuffer, vertexBuffer, bufferSize);
 
-	vk::Buffer stagingBuffer;
-	vk::DeviceMemory stagingBufferMemory;
-	CreateBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
-
-	void* data = device->mapMemory(stagingBufferMemory, 0, bufferSize);
-		memcpy(data, model->vertices.data(), static_cast<size_t>(bufferSize));
-	device->unmapMemory(stagingBufferMemory);
-
-	CreateBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eVertexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, vertexBuffer, vertexBufferMemory);
-
-	CopyBuffer(stagingBuffer, vertexBuffer, bufferSize);
-
-	device->destroyBuffer(stagingBuffer);
-	device->freeMemory(stagingBufferMemory);
+	return vertexBuffer;
 }
 
-void VKRenderer::CreateIndexBuffer(){
-	vk::DeviceSize bufferSize = sizeof(model->indices[0]) * model->indices.size();
+VKBuffer* VKRenderer::CreateIndexBuffer(const std::vector<uint32_t>& indices_){
+	vk::DeviceSize bufferSize = sizeof(indices_[0]) * indices_.size();
+	VKBuffer stagingBuffer = VKBuffer(device.get(), bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent);
+	stagingBuffer.MapMemory(indices_.data(), bufferSize);
 
-	vk::Buffer stagingBuffer;
-	vk::DeviceMemory stagingBufferMemory;
-	CreateBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, stagingBuffer, stagingBufferMemory);
+	VKBuffer* indexBuffer = new VKBuffer(device.get(), bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eIndexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal);
+	CopyBuffer(&stagingBuffer, indexBuffer, bufferSize);
 
-	void* data = device->mapMemory(stagingBufferMemory, 0, bufferSize);
-		memcpy(data, model->indices.data(), (size_t)bufferSize);
-	device->unmapMemory(stagingBufferMemory);
-
-	CreateBuffer(bufferSize, vk::BufferUsageFlagBits::eTransferDst | vk::BufferUsageFlagBits::eIndexBuffer, vk::MemoryPropertyFlagBits::eDeviceLocal, indexBuffer, indexBufferMemory);
-
-	CopyBuffer(stagingBuffer, indexBuffer, bufferSize);
-
-	device->destroyBuffer(stagingBuffer);
-	device->freeMemory(stagingBufferMemory);
+	return indexBuffer;
 }
 
 void VKRenderer::CreateUniformBuffers(){
 	vk::DeviceSize bufferSize = sizeof(UniformBufferObject);
 
-	uniformBuffers.resize(swapChainImages.size());
-	uniformBuffersMemory.resize(swapChainImages.size());
-
+	uniformBuffers.clear();
+	uniformBuffers.reserve(swapChainImages.size());
 	for(size_t i = 0; i < swapChainImages.size(); i++){
-		CreateBuffer(bufferSize, vk::BufferUsageFlagBits::eUniformBuffer, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent, uniformBuffers[i], uniformBuffersMemory[i]);
+		uniformBuffers.push_back(new VKBuffer(device.get(), bufferSize, vk::BufferUsageFlagBits::eUniformBuffer, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent));
 	}
 }
 
@@ -962,6 +916,10 @@ void VKRenderer::CreateDescriptorPool(){
 }
 
 void VKRenderer::CreateDescriptorSets(){
+	//TODO - FOR TESTING PURPOSES ONLY
+	auto renderInfo = Test_GetObjectRenderInfo();
+	//Back to your regularly scheduled code
+
 	std::vector<vk::DescriptorSetLayout> layouts(swapChainImages.size(), descriptorSetLayout);
 	vk::DescriptorSetAllocateInfo allocInfo{};
 	allocInfo.descriptorPool = descriptorPool;
@@ -976,14 +934,14 @@ void VKRenderer::CreateDescriptorSets(){
 
 	for(size_t i = 0; i < swapChainImages.size(); i++){
 		vk::DescriptorBufferInfo bufferInfo{};
-		bufferInfo.buffer = uniformBuffers[i];
+		bufferInfo.buffer = uniformBuffers[i]->buffer;
 		bufferInfo.offset = 0;
 		bufferInfo.range = sizeof(UniformBufferObject);
 
 		vk::DescriptorImageInfo imageInfo{};
 		imageInfo.imageLayout = vk::ImageLayout::eShaderReadOnlyOptimal;
-		imageInfo.imageView = textureImageView;
-		imageInfo.sampler = textureSampler;
+		imageInfo.imageView = renderInfo->image->imageView;
+		imageInfo.sampler = renderInfo->image->sampler;
 
 		std::array<vk::WriteDescriptorSet, 2> descriptorWrites{};
 		descriptorWrites[0].dstSet = descriptorSets[i];
@@ -1005,6 +963,10 @@ void VKRenderer::CreateDescriptorSets(){
 }
 
 void VKRenderer::CreateCommandBuffers(){
+	//TODO - FOR TESTING PURPOSES ONLY
+	auto renderInfo = Test_GetObjectRenderInfo();
+	//Back to your regularly scheduled code
+
 	commandBuffers.clear();
 	commandBuffers.resize(swapChainFramebuffers.size());
 
@@ -1045,12 +1007,12 @@ void VKRenderer::CreateCommandBuffers(){
 
 		commandBuffers[i].beginRenderPass(renderPassInfo, vk::SubpassContents::eInline);
 			commandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, graphicsPipeline);
-			vk::Buffer vertexBuffers[] = { vertexBuffer };
+			vk::Buffer vertexBuffers[] = { renderInfo->vertexBuffer->buffer };
 			vk::DeviceSize offsets[] = { 0 };
 			commandBuffers[i].bindVertexBuffers(0, 1, vertexBuffers, offsets);
-			commandBuffers[i].bindIndexBuffer(indexBuffer, 0, vk::IndexType::eUint32);
+			commandBuffers[i].bindIndexBuffer(renderInfo->indexBuffer->buffer, 0, vk::IndexType::eUint32);
 			commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipelineLayout, 0, descriptorSets[i], nullptr);
-			commandBuffers[i].drawIndexed(static_cast<uint32_t>(model->indices.size()), 1, 0, 0, 0);
+			commandBuffers[i].drawIndexed(static_cast<uint32_t>(renderInfo->model->indices.size()), 1, 0, 0, 0);
 		commandBuffers[i].endRenderPass();
 
 		try{
@@ -1086,13 +1048,8 @@ void VKRenderer::CreateSyncObjects(){
 }
 
 void VKRenderer::CleanupSwapChain(){
-	device->destroyImageView(colorImageView);
-	device->destroyImage(colorImage);
-	device->freeMemory(colorImageMemory);
-
-	device->destroyImageView(depthImageView);
-	device->destroyImage(depthImage);
-	device->freeMemory(depthImageMemory);
+	delete colorImage;
+	delete depthImage;
 
 	for(auto fb : swapChainFramebuffers){
 		device->destroyFramebuffer(fb);
@@ -1112,10 +1069,10 @@ void VKRenderer::CleanupSwapChain(){
 
 	device->destroySwapchainKHR(swapChain);
 
-	for(size_t i = 0; i < swapChainImages.size(); i++){
-		device->destroyBuffer(uniformBuffers[i]);
-		device->freeMemory(uniformBuffersMemory[i]);
+	for(VKBuffer* buffer : uniformBuffers){
+		delete buffer;
 	}
+	uniformBuffers.clear();
 
 	device->destroyDescriptorPool(descriptorPool);
 }
@@ -1145,10 +1102,8 @@ void VKRenderer::RecreateSwapChain(){
 }
 
 uint32_t VKRenderer::FindMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties){
-	auto memProperties = physicalDevice.getMemoryProperties();
-
-	for(uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
-		if((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties){
+	for(uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++) {
+		if((typeFilter & (1 << i)) && (memoryProperties.memoryTypes[i].propertyFlags & properties) == properties){
 			return i;
 		}
 	}
@@ -1194,9 +1149,7 @@ void VKRenderer::UpdateUniformBuffer(uint32_t currentImage){
 	ubo.proj = Matrix4::Perspective(45.0f, swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
 	//ubo.proj[5] *= -1;
 
-	void* data = device->mapMemory(uniformBuffersMemory[currentImage], 0, sizeof(ubo));
-		memcpy(data, &ubo, sizeof(ubo));
-	device->unmapMemory(uniformBuffersMemory[currentImage]);
+	uniformBuffers[currentImage]->MapMemory(&ubo, sizeof(ubo));
 }
 
 vk::CommandBuffer VKRenderer::BeginSingleTimeCommand(){
@@ -1232,7 +1185,7 @@ void VKRenderer::EndSingleTimeCommand(vk::CommandBuffer commandBuffer){
 	device->freeCommandBuffers(commandPool, commandBuffer);
 }
 
-void VKRenderer::TransitionImageLayout(vk::Image image, vk::Format format, vk::ImageLayout oldLayout, vk::ImageLayout newLayout, uint32_t mipLevels_){
+void VKRenderer::TransitionImageLayout(VKImage* image, vk::Format format, vk::ImageLayout oldLayout, vk::ImageLayout newLayout, uint32_t mipLevels_){
 	vk::CommandBuffer commandBuffer = BeginSingleTimeCommand();
 
 	vk::ImageMemoryBarrier barrier{};
@@ -1240,7 +1193,7 @@ void VKRenderer::TransitionImageLayout(vk::Image image, vk::Format format, vk::I
 	barrier.newLayout = newLayout;
 	barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
 	barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-	barrier.image = image;
+	barrier.image = image->image;
 	barrier.subresourceRange.baseMipLevel = 0;
 	barrier.subresourceRange.levelCount = mipLevels_;
 	barrier.subresourceRange.baseArrayLayer = 0;
@@ -1285,7 +1238,7 @@ void VKRenderer::TransitionImageLayout(vk::Image image, vk::Format format, vk::I
 	EndSingleTimeCommand(commandBuffer);
 }
 
-void VKRenderer::CopyBufferToImage(vk::Buffer buffer, vk::Image image, uint32_t width, uint32_t height){
+void VKRenderer::CopyBufferToImage(VKBuffer* buffer, VKImage* image, uint32_t width, uint32_t height){
 	vk::CommandBuffer commandBuffer = BeginSingleTimeCommand();
 
 	vk::BufferImageCopy region{};
@@ -1299,7 +1252,7 @@ void VKRenderer::CopyBufferToImage(vk::Buffer buffer, vk::Image image, uint32_t 
 	region.imageOffset = { 0, 0, 0 };
 	region.imageExtent = { width, height, 1 };
 
-	commandBuffer.copyBufferToImage(buffer, image, vk::ImageLayout::eTransferDstOptimal, region);
+	commandBuffer.copyBufferToImage(buffer->buffer, image->image, vk::ImageLayout::eTransferDstOptimal, region);
 
 	EndSingleTimeCommand(commandBuffer);
 }
@@ -1448,4 +1401,12 @@ void VKRenderer::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtils
 	if(func != nullptr){
 		func(instance, debugMessenger, pAllocator);
 	}
+}
+
+VKRenderInfo* VKRenderer::Test_GetObjectRenderInfo(){
+	for(MeshRenderer* mesh : meshes){
+		return dynamic_cast<VKRenderInfo*>(mesh->renderInfo);
+	}
+
+	return nullptr;
 }

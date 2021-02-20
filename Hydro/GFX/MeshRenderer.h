@@ -3,6 +3,9 @@
 
 #include <string>
 
+#include "GFX/Model.h"
+#include "GFX/RenderInfo.h"
+#include "GFX/Texture.h"
 #include "Objects/Component.h"
 
 namespace Hydro{
@@ -10,6 +13,19 @@ namespace Hydro{
 	public:
 		MeshRenderer(const std::string& modelName_, const std::string& textureName_);
 		~MeshRenderer();
+
+		Model* GetModel() const{ return model; }
+		Texture* GetTexture() const{ return texture; }
+
+	private:
+		friend class Renderer;
+		friend class VKRenderer;
+
+		Model* model;
+		Texture* texture;
+		RenderInfo* renderInfo;
+
+		void SetRenderInfo(RenderInfo* info_);
 	};
 }
 
