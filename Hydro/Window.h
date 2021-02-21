@@ -29,6 +29,7 @@ namespace Hydro{
 
 		//Graphics API specific stuff
 		vk::SurfaceKHR CreateVKSurface(const vk::Instance& instance_);
+		std::vector<const char*> GetVKExtensions();
 
 	private:
 		SDL_Window* window;

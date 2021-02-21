@@ -16,10 +16,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_vulkan.h>
-
 using namespace Hydro;
 
 const std::vector<const char*> VKRenderer::validationLayers = {
@@ -1119,17 +1115,8 @@ vk::SampleCountFlagBits VKRenderer::GetMaxUsableSampleCount(){
 }
 
 std::vector<const char*> VKRenderer::GetRequiredExtensions(){
-	unsigned int sdlExtensionCount = 0;
-	if(!SDL_Vulkan_GetInstanceExtensions(window->GetSDLWindow(), &sdlExtensionCount, nullptr)){
-		throw std::exception("Failed to get VK extension count!");
-	}
-
-	std::vector<const char*> sdlExtensions(sdlExtensionCount);
-	if(!SDL_Vulkan_GetInstanceExtensions(window->GetSDLWindow(), &sdlExtensionCount, sdlExtensions.data())){
-		throw std::exception("Failed to get VK extensions!");
-	}
-
-	std::vector<const char*> extensions(sdlExtensions.data(), sdlExtensions.data() + sdlExtensionCount);
+	std::vector<const char*> sdlExtensions = window->GetVKExtensions();
+	std::vector<const char*> extensions(sdlExtensions.data(), sdlExtensions.data() + sdlExtensions.size());
 
 	if(enableValidationLayers){
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);

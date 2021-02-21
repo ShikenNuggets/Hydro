@@ -90,3 +90,17 @@ vk::SurfaceKHR Window::CreateVKSurface(const vk::Instance& instance_){
 
 	return rawSurface;
 }
+
+std::vector<const char*> Window::GetVKExtensions(){
+	unsigned int sdlExtensionCount = 0;
+	if(!SDL_Vulkan_GetInstanceExtensions(window, &sdlExtensionCount, nullptr)){
+		throw std::exception("Failed to get VK extension count!");
+	}
+
+	std::vector<const char*> sdlExtensions(sdlExtensionCount);
+	if(!SDL_Vulkan_GetInstanceExtensions(window, &sdlExtensionCount, sdlExtensions.data())){
+		throw std::exception("Failed to get VK extensions!");
+	}
+
+	return sdlExtensions;
+}
