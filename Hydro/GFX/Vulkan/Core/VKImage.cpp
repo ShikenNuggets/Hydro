@@ -1,6 +1,6 @@
 #include "VKImage.h"
 
-#include "GFX/Vulkan/VKRenderer.h"
+#include "GFX/Vulkan/Core/Vulkan.h"
 
 using namespace Hydro;
 
@@ -29,7 +29,7 @@ VKImage::VKImage(const vk::Device& device_, uint32_t w_, uint32_t h_, uint32_t m
 
 	vk::MemoryAllocateInfo allocInfo{};
 	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = VKRenderer::FindMemoryType(memRequirements.memoryTypeBits, properties); //TODO - Holy shit this sucks, imagine having to do a dynamic cast because you were a 'good coder' and avoided using singletons or statically-initialized god objects
+	allocInfo.memoryTypeIndex = Vulkan::FindMemoryType(memRequirements.memoryTypeBits, properties);
 
 	try{
 		imageMemory = device.allocateMemory(allocInfo);

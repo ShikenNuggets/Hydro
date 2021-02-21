@@ -15,25 +15,9 @@
 #include "GFX/Vulkan/Core/VKBuffer.h"
 #include "GFX/Vulkan/Core/VKImage.h"
 #include "GFX/Vulkan/Core/VKPipeline.h"
+#include "GFX/Vulkan/Core/VKState.h"
 
 namespace Hydro{
-	struct QueueFamilyIndices{
-		std::optional<uint32_t> graphicsFamily;
-		std::optional<uint32_t> presentFamily;
-
-		bool IsComplete() const{
-			return graphicsFamily.has_value() && presentFamily.has_value();
-		}
-	};
-
-	struct SwapChainSupportDetails{
-		SwapChainSupportDetails() : capabilities(), formats(), presentModes(){}
-
-		vk::SurfaceCapabilitiesKHR capabilities;
-		std::vector<vk::SurfaceFormatKHR> formats;
-		std::vector<vk::PresentModeKHR> presentModes;
-	};
-
 	struct UniformBufferObject{
 		//Things in this structure should be explicitly aligned in case we modify it
 		//If we don't rendering could break entirely
@@ -49,8 +33,6 @@ namespace Hydro{
 
 		void Render();
 
-		static uint32_t FindMemoryType(uint32_t typeFilter, vk::MemoryPropertyFlags properties);
-
 	protected:
 		virtual void CreateRenderInfo(MeshRenderer* mesh_) override;
 
@@ -58,13 +40,7 @@ namespace Hydro{
 		VKRenderInfo* Test_GetObjectRenderInfo();
 
 		Window* window;
-		vk::UniqueInstance instance;
-		VkDebugUtilsMessengerEXT debugMessenger;
-		vk::PhysicalDevice physicalDevice;
-		vk::UniqueDevice device;
-		vk::Queue graphicsQueue;
-		vk::Queue presentQueue;
-		vk::SurfaceKHR surface;
+		
 		vk::SwapchainKHR swapChain;
 		std::vector<vk::Image> swapChainImages;
 		vk::Format swapChainImageFormat;
@@ -97,11 +73,6 @@ namespace Hydro{
 		static const std::vector<const char*> deviceExtensions;
 		static vk::PhysicalDeviceMemoryProperties memoryProperties;
 
-		void CreateInstance();
-		bool CheckValidationLayerSupport();
-		void CreateDebugMessenger();
-		void SelectPhysicalDevice();
-		void CreateLogicalDevice();
 		void CreateSwapChain();
 		void CreateImageViews();
 		void CreateRenderPass();
@@ -128,13 +99,6 @@ namespace Hydro{
 		void CleanupSwapChain();
 		void RecreateSwapChain();
 
-		std::vector<const char*> GetRequiredExtensions();
-		bool IsDeviceSuitable(const vk::PhysicalDevice& device_);
-		bool DeviceSupportsExtensions(const vk::PhysicalDevice& device_);
-
-		QueueFamilyIndices FindQueueFamilies(vk::PhysicalDevice device_);
-		SwapChainSupportDetails QuerySwapChainSupport(const vk::PhysicalDevice& device_);
-
 		vk::SurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats);
 		vk::PresentModeKHR ChooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes);
 		vk::Extent2D ChooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities);
@@ -152,16 +116,6 @@ namespace Hydro{
 		void CopyBufferToImage(VKBuffer* buffer, VKImage* image, uint32_t width, uint32_t height);
 
 		vk::SampleCountFlagBits GetMaxUsableSampleCount();
-
-		//Debug stuff
-		void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
-		VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
-		void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
-
-		static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData){
-			std::cerr << "VK Validation Layer: " << pCallbackData->pMessage << std::endl; //TODO - Better message output (use severity, type, etc)
-			return VK_FALSE;
-		}
 	};
 }
 

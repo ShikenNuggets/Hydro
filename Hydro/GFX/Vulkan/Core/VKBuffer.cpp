@@ -1,7 +1,6 @@
 #include "VKBuffer.h"
 
-#include "GFX/Vulkan/VKRenderer.h"
-//#include "GFX/Vulkan/Core/Vulkan.h"
+#include "GFX/Vulkan/Core/Vulkan.h"
 
 using namespace Hydro;
 
@@ -21,7 +20,7 @@ VKBuffer::VKBuffer(const vk::Device& device_, vk::DeviceSize size_, vk::BufferUs
 
 	vk::MemoryAllocateInfo allocInfo{};
 	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = VKRenderer::FindMemoryType(memRequirements.memoryTypeBits, properties_);
+	allocInfo.memoryTypeIndex = Vulkan::FindMemoryType(memRequirements.memoryTypeBits, properties_);
 
 	try{
 		memory = device.allocateMemory(allocInfo);

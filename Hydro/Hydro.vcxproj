@@ -114,6 +114,8 @@
     <ClInclude Include="GFX\Vulkan\Core\VKBuffer.h" />
     <ClInclude Include="GFX\Vulkan\Core\VKImage.h" />
     <ClInclude Include="GFX\Vulkan\Core\VKPipeline.h" />
+    <ClInclude Include="GFX\Vulkan\Core\VKState.h" />
+    <ClInclude Include="GFX\Vulkan\Core\Vulkan.h" />
     <ClInclude Include="GFX\Vulkan\VKRenderInfo.h" />
     <ClInclude Include="Math\Euler.h" />
     <ClInclude Include="Math\Math.h" />
@@ -148,6 +150,8 @@
     <ClCompile Include="GFX\Vulkan\Core\VKBuffer.cpp" />
     <ClCompile Include="GFX\Vulkan\Core\VKImage.cpp" />
     <ClCompile Include="GFX\Vulkan\Core\VKPipeline.cpp" />
+    <ClCompile Include="GFX\Vulkan\Core\VKState.cpp" />
+    <ClCompile Include="GFX\Vulkan\Core\Vulkan.cpp" />
     <ClCompile Include="GFX\Vulkan\VKRenderInfo.cpp" />
     <ClCompile Include="Math\Euler.cpp" />
     <ClCompile Include="Math\Matrix2.cpp" />
