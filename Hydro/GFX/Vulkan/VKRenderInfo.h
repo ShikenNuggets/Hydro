@@ -3,8 +3,8 @@
 
 #include "GFX/MeshRenderer.h"
 #include "GFX/RenderInfo.h"
-#include "GFX/Vulkan/LowLevel/VKBuffer.h"
-#include "GFX/Vulkan/LowLevel/VKImage.h"
+#include "GFX/Vulkan/Core/VKBuffer.h"
+#include "GFX/Vulkan/Core/VKImage.h"
 
 namespace Hydro{
 	class VKRenderInfo : public RenderInfo{

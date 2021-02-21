@@ -49,7 +49,8 @@ VKRenderer::VKRenderer(Window* window_) : window(window_), instance(nullptr), de
 	CreateImageViews();
 	CreateRenderPass();
 	CreateDescriptorSetLayout();
-	CreateGraphicsPipeline();
+	graphicsPipeline = new VKPipeline(device.get(), "Resources/CompiledShaders/triangle-vert.spv", "Resources/CompiledShaders/triangle-frag.spv", swapChainExtent, msaaSamples, descriptorSetLayout, renderPass);
+	//CreateGraphicsPipeline();
 	CreateCommandPool();
 	CreateColorResources();
 	CreateDepthResources();
@@ -174,6 +175,7 @@ void VKRenderer::CreateRenderInfo(MeshRenderer* mesh_){
 	_ASSERT(mesh_ != nullptr);
 	mesh_->SetRenderInfo(new VKRenderInfo(mesh_->GetModel(), mesh_->GetTexture(), device.get(), CreateVertexBuffer(mesh_->GetModel()->vertices), CreateIndexBuffer(mesh_->GetModel()->indices), CreateTextureImage(mesh_->texture)));
 
+	//TODO - This is not the right or best place to do any of this
 	CreateUniformBuffers();
 	CreateDescriptorPool();
 	CreateDescriptorSets();
@@ -478,153 +480,6 @@ void VKRenderer::CreateDescriptorSetLayout(){
 		descriptorSetLayout = device->createDescriptorSetLayout(layoutInfo);
 	}catch(vk::SystemError err){
 		throw std::runtime_error("VK: Failed to create descriptor set layout! VK Error: " + std::string(err.what()));
-	}
-}
-
-void VKRenderer::CreateGraphicsPipeline(){
-	//Created on stack so this gets cleaned up automatically at the end of this function
-	VKShader shader = VKShader(device.get(), "Resources/CompiledShaders/triangle-vert.spv", "Resources/CompiledShaders/triangle-frag.spv");
-
-	vk::PipelineShaderStageCreateInfo shaderStages[] = {
-		vk::PipelineShaderStageCreateInfo(
-			vk::PipelineShaderStageCreateFlags(),
-			vk::ShaderStageFlagBits::eVertex,
-			shader.GetVertModule(),
-			"main"
-		),
-
-		vk::PipelineShaderStageCreateInfo(
-			vk::PipelineShaderStageCreateFlags(),
-			vk::ShaderStageFlagBits::eFragment,
-			shader.GetFragModule(),
-			"main"
-		)
-	};
-
-	auto bindingDescription = VKVertex::GetBindingDescription();
-	auto attributeDescription = VKVertex::GetAttributeDescription();
-
-	vk::PipelineVertexInputStateCreateInfo vertexInputInfo{};
-	vertexInputInfo.vertexBindingDescriptionCount = 1;
-	vertexInputInfo.pVertexBindingDescriptions = &bindingDescription; //Optional
-	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescription.size());
-	vertexInputInfo.pVertexAttributeDescriptions = attributeDescription.data(); //Optional
-
-	vk::PipelineInputAssemblyStateCreateInfo inputAssembly{};
-	inputAssembly.topology = vk::PrimitiveTopology::eTriangleList;
-	inputAssembly.primitiveRestartEnable = VK_FALSE;
-
-	vk::Viewport viewport{};
-	viewport.x = 0.0f;
-	viewport.y = 0.0f;
-	viewport.width = (float)swapChainExtent.width;
-	viewport.height = (float)swapChainExtent.height;
-	viewport.minDepth = 0.0f;
-	viewport.maxDepth = 1.0f;
-
-	vk::Rect2D scissor{};
-	scissor.offset = { 0, 0 };
-	scissor.extent = swapChainExtent;
-
-	vk::PipelineViewportStateCreateInfo viewportState{};
-	viewportState.viewportCount = 1;
-	viewportState.pViewports = &viewport;
-	viewportState.scissorCount = 1;
-	viewportState.pScissors = &scissor;
-
-	vk::PipelineRasterizationStateCreateInfo rasterizer{};
-	rasterizer.depthClampEnable = VK_FALSE;
-	rasterizer.rasterizerDiscardEnable = VK_FALSE;
-	rasterizer.polygonMode = vk::PolygonMode::eFill;
-	rasterizer.lineWidth = 1.0f;
-	rasterizer.cullMode = vk::CullModeFlagBits::eBack;
-	rasterizer.frontFace = vk::FrontFace::eCounterClockwise;
-	rasterizer.depthBiasEnable = VK_FALSE;
-	rasterizer.depthBiasConstantFactor = 0.0f; //Optional
-	rasterizer.depthBiasClamp = 0.0f; //Optional
-	rasterizer.depthBiasSlopeFactor = 0.0f; //Optional
-
-	vk::PipelineMultisampleStateCreateInfo multisampling{};
-	multisampling.sampleShadingEnable = VK_TRUE;
-	multisampling.rasterizationSamples = msaaSamples;
-	multisampling.minSampleShading = 0.01f; //Optional
-	multisampling.pSampleMask = nullptr; //Optional
-	multisampling.alphaToCoverageEnable = VK_FALSE; //Optional
-	multisampling.alphaToOneEnable = VK_FALSE; //Optional
-
-	vk::PipelineDepthStencilStateCreateInfo depthStencil{};
-	depthStencil.depthTestEnable = VK_TRUE;
-	depthStencil.depthWriteEnable = VK_TRUE;
-	depthStencil.depthCompareOp = vk::CompareOp::eLess;
-	depthStencil.depthBoundsTestEnable = VK_FALSE;
-	depthStencil.minDepthBounds = 0.0f; //Optional
-	depthStencil.maxDepthBounds = 1.0f; //Optional
-	depthStencil.stencilTestEnable = VK_FALSE;
-	//depthStencil.front{}; //Optional
-	//depthStencil.back{}; //Optional
-
-	vk::PipelineColorBlendAttachmentState colorBlendAttachment{};
-	colorBlendAttachment.colorWriteMask = vk::ColorComponentFlagBits::eR | vk::ColorComponentFlagBits::eG | vk::ColorComponentFlagBits::eB | vk::ColorComponentFlagBits::eA;
-	colorBlendAttachment.blendEnable = VK_FALSE;
-	colorBlendAttachment.srcColorBlendFactor = vk::BlendFactor::eOne; //Optional
-	colorBlendAttachment.dstColorBlendFactor = vk::BlendFactor::eZero; //Optional
-	colorBlendAttachment.colorBlendOp = vk::BlendOp::eAdd; //Optional
-	colorBlendAttachment.srcAlphaBlendFactor = vk::BlendFactor::eOne; //Optional
-	colorBlendAttachment.dstAlphaBlendFactor = vk::BlendFactor::eZero; //Optional
-	colorBlendAttachment.alphaBlendOp = vk::BlendOp::eAdd; //Optional
-
-	vk::PipelineColorBlendStateCreateInfo colorBlending{};
-	colorBlending.logicOpEnable = VK_FALSE;
-	colorBlending.logicOp = vk::LogicOp::eCopy; //Optional
-	colorBlending.attachmentCount = 1;
-	colorBlending.pAttachments = &colorBlendAttachment;
-	colorBlending.blendConstants[0] = 0.0f; //Optional
-	colorBlending.blendConstants[1] = 0.0f; //Optional
-	colorBlending.blendConstants[2] = 0.0f; //Optional
-	colorBlending.blendConstants[3] = 0.0f; //Optional
-
-	vk::DynamicState dynamicStates[] = {
-		vk::DynamicState::eViewport,
-		vk::DynamicState::eLineWidth
-	};
-
-	vk::PipelineDynamicStateCreateInfo dynamicState{};
-	dynamicState.dynamicStateCount = 2;
-	dynamicState.pDynamicStates = dynamicStates;
-
-	vk::PipelineLayoutCreateInfo pipelineLayoutInfo{};
-	pipelineLayoutInfo.setLayoutCount = 1; //Optional
-	pipelineLayoutInfo.pSetLayouts = &descriptorSetLayout; //Optional
-	pipelineLayoutInfo.pushConstantRangeCount = 0; //Optional
-	pipelineLayoutInfo.pPushConstantRanges = nullptr; //Optional
-
-	try{
-		pipelineLayout = device->createPipelineLayout(pipelineLayoutInfo);
-	}catch(vk::SystemError err){
-		throw std::runtime_error("Failed to create pipeline layout! VK Error: " + std::string(err.what()));
-	}
-
-	vk::GraphicsPipelineCreateInfo pipelineInfo{};
-	pipelineInfo.stageCount = 2;
-	pipelineInfo.pStages = shaderStages;
-	pipelineInfo.pVertexInputState = &vertexInputInfo;
-	pipelineInfo.pInputAssemblyState = &inputAssembly;
-	pipelineInfo.pViewportState = &viewportState;
-	pipelineInfo.pRasterizationState = &rasterizer;
-	pipelineInfo.pMultisampleState = &multisampling;
-	pipelineInfo.pDepthStencilState = &depthStencil;
-	pipelineInfo.pColorBlendState = &colorBlending;
-	pipelineInfo.pDynamicState = nullptr; //Optional
-	pipelineInfo.layout = pipelineLayout;
-	pipelineInfo.renderPass = renderPass;
-	pipelineInfo.subpass = 0;
-	pipelineInfo.basePipelineHandle = nullptr; //Optional
-	pipelineInfo.basePipelineIndex = -1; //Optional
-
-	try{
-		graphicsPipeline = device->createGraphicsPipeline(nullptr, pipelineInfo).value;
-	}catch(vk::SystemError err){
-		throw std::runtime_error("Failed to create graphics pipeline! VK Error: " + std::string(err.what()));
 	}
 }
 
@@ -1006,12 +861,12 @@ void VKRenderer::CreateCommandBuffers(){
 		renderPassInfo.pClearValues = clearValues.data();
 
 		commandBuffers[i].beginRenderPass(renderPassInfo, vk::SubpassContents::eInline);
-			commandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, graphicsPipeline);
+			commandBuffers[i].bindPipeline(vk::PipelineBindPoint::eGraphics, graphicsPipeline->pipeline);
 			vk::Buffer vertexBuffers[] = { renderInfo->vertexBuffer->buffer };
 			vk::DeviceSize offsets[] = { 0 };
 			commandBuffers[i].bindVertexBuffers(0, 1, vertexBuffers, offsets);
 			commandBuffers[i].bindIndexBuffer(renderInfo->indexBuffer->buffer, 0, vk::IndexType::eUint32);
-			commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, pipelineLayout, 0, descriptorSets[i], nullptr);
+			commandBuffers[i].bindDescriptorSets(vk::PipelineBindPoint::eGraphics, graphicsPipeline->layout, 0, descriptorSets[i], nullptr);
 			commandBuffers[i].drawIndexed(static_cast<uint32_t>(renderInfo->model->indices.size()), 1, 0, 0, 0);
 		commandBuffers[i].endRenderPass();
 
@@ -1058,8 +913,9 @@ void VKRenderer::CleanupSwapChain(){
 
 	device->freeCommandBuffers(commandPool, commandBuffers);
 
-	device->destroyPipeline(graphicsPipeline);
-	device->destroyPipelineLayout(pipelineLayout);
+	delete graphicsPipeline;
+	graphicsPipeline = nullptr;
+
 	device->destroyRenderPass(renderPass);
 
 	for(auto img : swapChainImageViews){
@@ -1091,7 +947,7 @@ void VKRenderer::RecreateSwapChain(){
 	CreateSwapChain();
 	CreateImageViews();
 	CreateRenderPass();
-	CreateGraphicsPipeline();
+	graphicsPipeline = new VKPipeline(device.get(), "Resources/CompiledShaders/triangle-vert.spv", "Resources/CompiledShaders/triangle-frag.spv", swapChainExtent, msaaSamples, descriptorSetLayout, renderPass);
 	CreateColorResources();
 	CreateDepthResources();
 	CreateFramebuffers();

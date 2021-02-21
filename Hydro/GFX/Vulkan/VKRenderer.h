@@ -12,8 +12,9 @@
 #include "GFX/Renderer.h"
 #include "GFX/Model.h"
 #include "GFX/Vulkan/VKRenderInfo.h"
-#include "GFX/Vulkan/LowLevel/VKBuffer.h"
-#include "GFX/Vulkan/LowLevel/VKImage.h"
+#include "GFX/Vulkan/Core/VKBuffer.h"
+#include "GFX/Vulkan/Core/VKImage.h"
+#include "GFX/Vulkan/Core/VKPipeline.h"
 
 namespace Hydro{
 	struct QueueFamilyIndices{
@@ -72,8 +73,10 @@ namespace Hydro{
 		std::vector<vk::Framebuffer> swapChainFramebuffers;
 		vk::RenderPass renderPass;
 		vk::DescriptorSetLayout descriptorSetLayout;
-		vk::PipelineLayout pipelineLayout;
-		vk::Pipeline graphicsPipeline;
+		//vk::PipelineLayout pipelineLayout;
+		//vk::Pipeline graphicsPipeline;
+		VKPipeline* graphicsPipeline;
+
 		vk::CommandPool commandPool;
 		std::vector<vk::CommandBuffer> commandBuffers;
 		std::vector<vk::Semaphore> imageAvailableSemaphores;
@@ -104,7 +107,7 @@ namespace Hydro{
 		void CreateImageViews();
 		void CreateRenderPass();
 		void CreateDescriptorSetLayout();
-		void CreateGraphicsPipeline();
+		//void CreateGraphicsPipeline();
 		void CreateFramebuffers();
 		void CreateCommandPool();
 		void CreateColorResources();

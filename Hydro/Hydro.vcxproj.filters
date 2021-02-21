@@ -70,8 +70,9 @@
     <ClInclude Include="Scenes\Scene.h" />
     <ClInclude Include="GFX\RenderInfo.h" />
     <ClInclude Include="GFX\Vulkan\VKRenderInfo.h" />
-    <ClInclude Include="GFX\Vulkan\LowLevel\VKBuffer.h" />
-    <ClInclude Include="GFX\Vulkan\LowLevel\VKImage.h" />
+    <ClInclude Include="GFX\Vulkan\Core\VKBuffer.h" />
+    <ClInclude Include="GFX\Vulkan\Core\VKImage.h" />
+    <ClInclude Include="GFX\Vulkan\Core\VKPipeline.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
@@ -123,7 +124,8 @@
       <Filter>Vulkan</Filter>
     </ClCompile>
     <ClCompile Include="GFX\Vulkan\VKRenderInfo.cpp" />
-    <ClCompile Include="GFX\Vulkan\LowLevel\VKBuffer.cpp" />
-    <ClCompile Include="GFX\Vulkan\LowLevel\VKImage.cpp" />
+    <ClCompile Include="GFX\Vulkan\Core\VKBuffer.cpp" />
+    <ClCompile Include="GFX\Vulkan\Core\VKImage.cpp" />
+    <ClCompile Include="GFX\Vulkan\Core\VKPipeline.cpp" />
   </ItemGroup>
 </Project>
