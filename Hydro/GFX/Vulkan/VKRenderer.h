@@ -100,7 +100,6 @@ namespace Hydro{
 		void CreateInstance();
 		bool CheckValidationLayerSupport();
 		void CreateDebugMessenger();
-		void CreateSurface();
 		void SelectPhysicalDevice();
 		void CreateLogicalDevice();
 		void CreateSwapChain();

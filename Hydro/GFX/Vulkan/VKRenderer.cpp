@@ -42,7 +42,7 @@ const bool enableValidationLayers = true;
 VKRenderer::VKRenderer(Window* window_) : window(window_), instance(nullptr), debugMessenger(nullptr), physicalDevice(nullptr), device(nullptr), graphicsQueue(nullptr), presentQueue(nullptr), surface(nullptr), swapChain(nullptr), swapChainImages(), currentFrame(0), msaaSamples(vk::SampleCountFlagBits::e1){
 	CreateInstance();
 	CreateDebugMessenger();
-	CreateSurface();
+	surface = window_->CreateVKSurface(instance.get());
 	SelectPhysicalDevice();
 	CreateLogicalDevice();
 	CreateSwapChain();
@@ -250,15 +250,6 @@ void VKRenderer::CreateDebugMessenger(){
 	if(CreateDebugUtilsMessengerEXT(*instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS){
 		throw std::runtime_error("failed to set up debug messenger!");
 	}
-}
-
-void VKRenderer::CreateSurface(){
-	VkSurfaceKHR rawSurface;
-	if(!SDL_Vulkan_CreateSurface(window->GetSDLWindow(), instance.get(), &rawSurface)){
-		throw std::runtime_error("Could not create VK Surface!");
-	}
-
-	surface = rawSurface;
 }
 
 void VKRenderer::SelectPhysicalDevice(){

@@ -81,3 +81,12 @@ void Window::HandleWindowEvent(SDL_Event e){
 			break;
 	}
 }
+
+vk::SurfaceKHR Window::CreateVKSurface(const vk::Instance& instance_){
+	VkSurfaceKHR rawSurface;
+	if(!SDL_Vulkan_CreateSurface(window, instance_, &rawSurface)){
+		throw std::runtime_error("Could not create VK Surface!");
+	}
+
+	return rawSurface;
+}

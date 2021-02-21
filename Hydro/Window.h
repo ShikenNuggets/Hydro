@@ -4,6 +4,7 @@
 #include <string>
 
 #include <SDL.h>
+#include <vulkan/vulkan.hpp>
 
 namespace Hydro{
 	class Window{
@@ -25,6 +26,9 @@ namespace Hydro{
 		int Height() const{ return height; }
 		std::string Name() const{ return name; }
 		State GetState() const{ return state; }
+
+		//Graphics API specific stuff
+		vk::SurfaceKHR CreateVKSurface(const vk::Instance& instance_);
 
 	private:
 		SDL_Window* window;
