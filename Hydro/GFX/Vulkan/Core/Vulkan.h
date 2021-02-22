@@ -39,6 +39,10 @@ namespace Hydro{
 		static SwapChainSupportDetails QuerySwapChainSupport(const vk::PhysicalDevice& device_ = Vulkan::PhysicalDevice(), const vk::SurfaceKHR& surface_ = Vulkan::Surface());
 		static vk::SampleCountFlagBits GetMaxUsableSampleCount(const vk::PhysicalDevice& device_ = Vulkan::PhysicalDevice());
 
+		static vk::SurfaceFormatKHR ChooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats);
+		static vk::PresentModeKHR ChooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes);
+		static vk::Extent2D ChooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities, Window* window_);
+
 	private:
 		friend class VKRenderer;
 		static VKState* state;

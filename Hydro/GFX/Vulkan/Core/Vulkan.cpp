@@ -1,5 +1,7 @@
 #include "Vulkan.h"
 
+#include "Utils.h"
+
 using namespace Hydro;
 
 VKState* Vulkan::state = nullptr;
@@ -60,4 +62,38 @@ vk::SampleCountFlagBits Vulkan::GetMaxUsableSampleCount(const vk::PhysicalDevice
 	if(counts & vk::SampleCountFlagBits::e2){ return vk::SampleCountFlagBits::e2; }
 
 	return vk::SampleCountFlagBits::e1;
+}
+
+vk::SurfaceFormatKHR Vulkan::ChooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats){
+	for(const auto& format : availableFormats){
+		if(format.format == vk::Format::eB8G8R8A8Srgb && format.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear){
+			return format;
+		}
+	}
+
+	_ASSERT(!availableFormats.empty());
+	return availableFormats[0];
+}
+
+vk::PresentModeKHR Vulkan::ChooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes){
+	if(Utils::Has(availablePresentModes, vk::PresentModeKHR::eMailbox)){
+		return vk::PresentModeKHR::eMailbox;
+	}
+	else if(Utils::Has(availablePresentModes, vk::PresentModeKHR::eImmediate)){
+		return vk::PresentModeKHR::eImmediate;
+	}
+
+	return vk::PresentModeKHR::eFifo; //This is guaranteed to be supported
+}
+
+vk::Extent2D Vulkan::ChooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities, Window* window_){
+	if(capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()){
+		return capabilities.currentExtent;
+	}
+
+	vk::Extent2D actualExtent = { static_cast<uint32_t>(window_->Width()), static_cast<uint32_t>(window_->Height()) };
+	actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+	actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+
+	return actualExtent;
 }

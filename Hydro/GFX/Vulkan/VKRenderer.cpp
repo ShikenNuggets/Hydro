@@ -149,9 +149,9 @@ void VKRenderer::CreateRenderInfo(MeshRenderer* mesh_){
 
 void VKRenderer::CreateSwapChain(){
 	SwapChainSupportDetails swapChainSupport = Vulkan::QuerySwapChainSupport(Vulkan::PhysicalDevice());
-	vk::SurfaceFormatKHR surfaceFormat = ChooseSwapSurfaceFormat(swapChainSupport.formats);
-	vk::PresentModeKHR presentMode = ChooseSwapPresentMode(swapChainSupport.presentModes);
-	vk::Extent2D extent = ChooseSwapExtent(swapChainSupport.capabilities);
+	vk::SurfaceFormatKHR surfaceFormat = Vulkan::ChooseSwapSurfaceFormat(swapChainSupport.formats);
+	vk::PresentModeKHR presentMode = Vulkan::ChooseSwapPresentMode(swapChainSupport.presentModes);
+	vk::Extent2D extent = Vulkan::ChooseSwapExtent(swapChainSupport.capabilities, window);
 
 	uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
 	if(swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount){
@@ -691,7 +691,7 @@ void VKRenderer::CleanupSwapChain(){
 	delete colorImage;
 	delete depthImage;
 
-	for(auto fb : swapChainFramebuffers){
+	for(auto &fb : swapChainFramebuffers){
 		Vulkan::Device().destroyFramebuffer(fb);
 	}
 	swapChainFramebuffers.clear();
@@ -703,7 +703,7 @@ void VKRenderer::CleanupSwapChain(){
 
 	Vulkan::Device().destroyRenderPass(renderPass);
 
-	for(auto img : swapChainImageViews){
+	for(auto &img : swapChainImageViews){
 		Vulkan::Device().destroyImageView(img);
 	}
 	swapChainImageViews.clear();
@@ -886,39 +886,6 @@ void VKRenderer::CopyBufferToImage(VKBuffer* buffer, VKImage* image, uint32_t wi
 	commandBuffer.copyBufferToImage(buffer->buffer, image->image, vk::ImageLayout::eTransferDstOptimal, region);
 
 	EndSingleTimeCommand(commandBuffer);
-}
-
-vk::SurfaceFormatKHR VKRenderer::ChooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR>& availableFormats){
-	for(const auto& format : availableFormats){
-		if(format.format == vk::Format::eB8G8R8A8Srgb && format.colorSpace == vk::ColorSpaceKHR::eSrgbNonlinear){
-			return format;
-		}
-	}
-
-	_ASSERT(!availableFormats.empty());
-	return availableFormats[0];
-}
-
-vk::PresentModeKHR VKRenderer::ChooseSwapPresentMode(const std::vector<vk::PresentModeKHR>& availablePresentModes){
-	if(Utils::Has(availablePresentModes, vk::PresentModeKHR::eMailbox)){
-		return vk::PresentModeKHR::eMailbox;
-	}else if(Utils::Has(availablePresentModes, vk::PresentModeKHR::eImmediate)){
-		return vk::PresentModeKHR::eImmediate;
-	}
-	
-	return vk::PresentModeKHR::eFifo; //This is guaranteed to be supported
-}
-
-vk::Extent2D VKRenderer::ChooseSwapExtent(const vk::SurfaceCapabilitiesKHR& capabilities){
-	if(capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()){
-		return capabilities.currentExtent;
-	}
-
-	vk::Extent2D actualExtent = { static_cast<uint32_t>(window->Width()), static_cast<uint32_t>(window->Height()) };
-	actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
-	actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
-
-	return actualExtent;
 }
 
 VKRenderInfo* VKRenderer::Test_GetObjectRenderInfo(){
