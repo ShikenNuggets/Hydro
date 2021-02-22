@@ -19,15 +19,6 @@
 
 using namespace Hydro;
 
-//const std::vector<const char*> VKRenderer::validationLayers = {
-//	"VK_LAYER_KHRONOS_validation"
-//};
-//
-//const std::vector<const char*> VKRenderer::deviceExtensions = {
-//	VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-//	VK_NV_RAY_TRACING_EXTENSION_NAME
-//};
-
 vk::PhysicalDeviceMemoryProperties VKRenderer::memoryProperties;
 
 #ifdef NDEBUG
@@ -41,43 +32,21 @@ VKRenderer::VKRenderer(Window* window_) : window(window_), swapChain(nullptr), s
 	
 	msaaSamples = Vulkan::GetMaxUsableSampleCount();
 
-	//CreateInstance();
-	//CreateDebugMessenger();
-	//surface = window_->CreateVKSurface(instance.get());
-	//SelectPhysicalDevice();
-	//CreateLogicalDevice();
 	CreateSwapChain();
 	CreateImageViews();
 	CreateRenderPass();
 	CreateDescriptorSetLayout();
 	graphicsPipeline = new VKPipeline(Vulkan::Device(), "Resources/CompiledShaders/triangle-vert.spv", "Resources/CompiledShaders/triangle-frag.spv", swapChainExtent, msaaSamples, descriptorSetLayout, renderPass);
-	//CreateGraphicsPipeline();
 	CreateCommandPool();
 	CreateColorResources();
 	CreateDepthResources();
 	CreateFramebuffers();
-	//CreateTextureImage();
-	//CreateTextureSampler();
-
-	//CreateVertexBuffer();
-	//CreateIndexBuffer();
-
-	/*CreateUniformBuffers();
-	CreateDescriptorPool();
-	CreateDescriptorSets();
-	CreateCommandBuffers();
-	CreateSyncObjects();*/
 }
 
 VKRenderer::~VKRenderer(){
 	Vulkan::Device().waitIdle();
 
 	CleanupSwapChain();
-
-	//device->destroySampler(textureSampler);
-	//device->destroyImageView(textureImageView);
-	//device->destroyImage(textureImage);
-	//device->freeMemory(textureImageMemory);
 
 	Vulkan::Device().destroyDescriptorSetLayout(descriptorSetLayout);
 
@@ -387,42 +356,6 @@ void VKRenderer::CreateDepthResources(){
 
 	TransitionImageLayout(depthImage, depthFormat, vk::ImageLayout::eUndefined, vk::ImageLayout::eDepthStencilAttachmentOptimal, 1);
 }
-
-//void VKRenderer::CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels_, vk::SampleCountFlagBits numSamples, vk::Format format, vk::ImageTiling tiling, vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Image& image, vk::DeviceMemory& imageMemory){
-//	vk::ImageCreateInfo imageInfo{};
-//	imageInfo.imageType = vk::ImageType::e2D;
-//	imageInfo.extent.width = width;
-//	imageInfo.extent.height = height;
-//	imageInfo.extent.depth = 1;
-//	imageInfo.mipLevels = mipLevels_;
-//	imageInfo.arrayLayers = 1;
-//	imageInfo.format = format;
-//	imageInfo.tiling = tiling;
-//	imageInfo.initialLayout = vk::ImageLayout::eUndefined;
-//	imageInfo.usage = usage;
-//	imageInfo.samples = numSamples;
-//	imageInfo.sharingMode = vk::SharingMode::eExclusive;
-//
-//	try{
-//		image = device->createImage(imageInfo);
-//	}catch(vk::SystemError err){
-//		throw std::runtime_error("Failed to create image! VK Error: " + std::string(err.what()));
-//	}
-//
-//	vk::MemoryRequirements memRequirements = device->getImageMemoryRequirements(image);
-//
-//	vk::MemoryAllocateInfo allocInfo{};
-//	allocInfo.allocationSize = memRequirements.size;
-//	allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties);
-//
-//	try{
-//		imageMemory = device->allocateMemory(allocInfo);
-//	}catch(vk::SystemError err){
-//		throw std::runtime_error("Failed to allocate image memory! VK Error: " + std::string(err.what()));
-//	}
-//
-//	device->bindImageMemory(image, imageMemory, 0);
-//}
 
 vk::ImageView VKRenderer::CreateImageView(vk::Image image, vk::Format format, vk::ImageAspectFlags aspectFlags, uint32_t mipLevels_){
 	auto createInfo = vk::ImageViewCreateInfo();

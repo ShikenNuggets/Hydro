@@ -49,8 +49,6 @@ namespace Hydro{
 		std::vector<vk::Framebuffer> swapChainFramebuffers;
 		vk::RenderPass renderPass;
 		vk::DescriptorSetLayout descriptorSetLayout;
-		//vk::PipelineLayout pipelineLayout;
-		//vk::Pipeline graphicsPipeline;
 		VKPipeline* graphicsPipeline;
 
 		vk::CommandPool commandPool;
@@ -77,12 +75,10 @@ namespace Hydro{
 		void CreateImageViews();
 		void CreateRenderPass();
 		void CreateDescriptorSetLayout();
-		//void CreateGraphicsPipeline();
 		void CreateFramebuffers();
 		void CreateCommandPool();
 		void CreateColorResources();
 		void CreateDepthResources();
-		//void CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels_, vk::SampleCountFlagBits numSamples, vk::Format format, vk::ImageTiling tiling, vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Image& image, vk::DeviceMemory& imageMemory);
 		vk::ImageView CreateImageView(vk::Image image, vk::Format format, vk::ImageAspectFlags aspectFlags, uint32_t mipLevels_);
 		void GenerateMipmaps(VKImage* image, vk::Format imageFormat, int32_t texWidth, int32_t texHeight, uint32_t mipLevels_);
 		VKImage* CreateTextureImage(Texture* texture_);
@@ -114,8 +110,6 @@ namespace Hydro{
 
 		void TransitionImageLayout(VKImage* image, vk::Format format, vk::ImageLayout oldLayout, vk::ImageLayout newLayout, uint32_t mipLevels_);
 		void CopyBufferToImage(VKBuffer* buffer, VKImage* image, uint32_t width, uint32_t height);
-
-		vk::SampleCountFlagBits GetMaxUsableSampleCount();
 	};
 }
 
