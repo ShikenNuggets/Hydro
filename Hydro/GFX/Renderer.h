@@ -3,12 +3,18 @@
 
 #include <list>
 
+#include "Window.h"
 #include "GFX/Camera.h"
+#include "GFX/Color.h"
 #include "GFX/MeshRenderer.h"
 
 namespace Hydro{
 	class Renderer{
 	public:
+		Renderer(Window* window_) : window(window_){
+			_ASSERT(window != nullptr);
+		}
+
 		virtual void Render() = 0;
 
 		void AddCamera(Camera* camera_);
@@ -17,9 +23,10 @@ namespace Hydro{
 		void RemoveCamera(Camera* camera_);
 		void RemoveMesh(MeshRenderer* mesh_);
 
-		void OnResize(int width, int height);
+		virtual void OnResize(int width, int height);
 
 	protected:
+		Window* window;
 		std::list<Camera*> cameras;
 		std::list<MeshRenderer*> meshes;
 

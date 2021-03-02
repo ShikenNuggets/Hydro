@@ -8,7 +8,6 @@
 #include <vulkan/vulkan.hpp>
 
 #include "VKVertex.h"
-#include "Window.h"
 #include "GFX/Renderer.h"
 #include "GFX/Model.h"
 #include "GFX/Vulkan/VKRenderInfo.h"
@@ -38,8 +37,6 @@ namespace Hydro{
 
 	private:
 		VKRenderInfo* Test_GetObjectRenderInfo();
-
-		Window* window;
 		
 		vk::SwapchainKHR swapChain;
 		std::vector<vk::Image> swapChainImages;
@@ -84,7 +81,7 @@ namespace Hydro{
 		VKImage* CreateTextureImage(Texture* texture_);
 		vk::Sampler CreateTextureSampler();
 		void CopyBuffer(VKBuffer* sourceBuffer, VKBuffer* destBuffer, vk::DeviceSize size);
-		VKBuffer* CreateVertexBuffer(const std::vector<VKVertex>& vertices_);
+		VKBuffer* CreateVertexBuffer(const std::vector<Vertex>& vertices_);
 		VKBuffer* CreateIndexBuffer(const std::vector<uint32_t>& indices_);
 		void CreateUniformBuffers();
 		void CreateDescriptorPool();

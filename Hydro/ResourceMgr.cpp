@@ -1,7 +1,7 @@
 #include "ResourceMgr.h"
 
-#include "GFX/Texture.h";
-#include "GFX/Model.h";
+#include "GFX/Texture.h"
+#include "GFX/Model.h"
 
 using namespace Hydro;
 

@@ -8,14 +8,14 @@
 #include <assimp/postprocess.h>
 
 #include "Resource.h"
-#include "Vulkan/VKVertex.h"
+#include "Vertex.h"
 
 namespace Hydro{
 	class Model : public Resource{
 	public:
-		Model(const std::vector<VKVertex>& vertices_, const std::vector<uint32_t>& indices_);
+		Model(const std::vector<Vertex>& vertices_, const std::vector<uint32_t>& indices_);
 
-		std::vector<VKVertex> vertices;
+		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
 	};
 
@@ -30,7 +30,7 @@ namespace Hydro{
 		ModelLoader();
 		~ModelLoader();
 
-		void ProcessNode(const aiNode* node, const aiScene* scene, std::vector<VKVertex>& vertices, std::vector<uint32_t>& indices);
+		void ProcessNode(const aiNode* node, const aiScene* scene, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices);
 
 		static ModelLoader* instance;
 	};

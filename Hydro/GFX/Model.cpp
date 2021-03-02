@@ -7,7 +7,7 @@ using namespace Hydro;
 
 ModelLoader* ModelLoader::instance = nullptr;
 
-Model::Model(const std::vector<VKVertex>& vertices_, const std::vector<uint32_t>& indices_) : Resource(), vertices(vertices_), indices(indices_){}
+Model::Model(const std::vector<Vertex>& vertices_, const std::vector<uint32_t>& indices_) : Resource(), vertices(vertices_), indices(indices_){}
 
 ModelLoader::ModelLoader(){
 }
@@ -24,7 +24,7 @@ ModelLoader* ModelLoader::Get(){
 }
 
 Model ModelLoader::LoadModel(const std::string& path_){
-	std::vector<VKVertex> vertices;
+	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 
 	tinyobj::attrib_t attrib;
@@ -38,9 +38,9 @@ Model ModelLoader::LoadModel(const std::string& path_){
 
 	for(const auto& shape : shapes){
 		for(const auto& index : shape.mesh.indices){
-			VKVertex vertex{
+			Vertex vertex{
 				Vector3(attrib.vertices[3 * index.vertex_index + 0], attrib.vertices[3 * index.vertex_index + 1], attrib.vertices[3 * index.vertex_index + 2]),
-				Vector3(1.0f, 1.0f, 1.0f),
+				Color(1.0f, 1.0f, 1.0f),
 				Vector2(attrib.texcoords[2 * index.texcoord_index + 0], 1.0f - attrib.texcoords[2 * index.texcoord_index + 1])
 			};
 
@@ -54,7 +54,7 @@ Model ModelLoader::LoadModel(const std::string& path_){
 }
 
 Model ModelLoader::Test_LoadModel(const std::string& path_){
-	std::vector<VKVertex> vertices;
+	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
 
 	Assimp::Importer importer;
@@ -70,14 +70,14 @@ Model ModelLoader::Test_LoadModel(const std::string& path_){
 	return Model(vertices, indices);
 }
 
-void ModelLoader::ProcessNode(const aiNode* node, const aiScene* scene, std::vector<VKVertex>& vertices, std::vector<uint32_t>& indices){
+void ModelLoader::ProcessNode(const aiNode* node, const aiScene* scene, std::vector<Vertex>& vertices, std::vector<uint32_t>& indices){
 	for(unsigned int i = 0; i < node->mNumMeshes; i++){
 		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 
 		for(unsigned int j = 0; j < mesh->mNumVertices; j++){
-			vertices.push_back(VKVertex(
+			vertices.push_back(Vertex(
 				Vector3(mesh->mVertices[j].x, mesh->mVertices[j].y, mesh->mVertices[j].z),
-				Vector3(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z),
+				Color(mesh->mNormals[j].x, mesh->mNormals[j].y, mesh->mNormals[j].z),
 				Vector2(mesh->mTextureCoords[0][j].x, mesh->mTextureCoords[0][j].y)
 			));
 		}

@@ -42,14 +42,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Build\temp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>..\Build\Hydro\Debug\</OutDir>
+    <IntDir>..\Build\temp\Hydro\Debug\</IntDir>
     <TargetName>Hydro</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)Build\$(ProjectName)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)Build\temp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>..\Build\Hydro\Release\</OutDir>
+    <IntDir>..\Build\temp\Hydro\Release\</IntDir>
     <TargetName>Hydro</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
@@ -58,7 +58,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>HYDRO_PLATFORM_WIN32;HYDRO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;..\SDK\AssImp\include;..\SDK\AssImp\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;..\SDK\AssImp\include;..\SDK\AssImp\build\include;..\SDK\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -71,8 +71,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Build\SDL2\$(Configuration);..\Build\SDL2main\$(Configuration);..\Build\SDL2_image\$(Configuration);C:\VulkanSDK\1.2.141.2\Lib;..\Build\assimp\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Build\SDL2\Debug;..\Build\SDL2main\Debug;..\Build\SDL2_image\Debug;C:\VulkanSDK\1.2.141.2\Lib;..\Build\assimp\Debug;..\SDK\glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -80,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>HYDRO_PLATFORM_WIN32;HYDRO_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;..\SDK\AssImp\include;..\SDK\AssImp\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;..\SDK\AssImp\include;..\SDK\AssImp\build\include;..\SDK\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -96,21 +95,31 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Build\SDL2\$(Configuration);..\Build\SDL2main\$(Configuration);..\Build\SDL2_image\$(Configuration);C:\VulkanSDK\1.2.141.2\Lib;..\Build\assimp\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Build\SDL2\Release;..\Build\SDL2main\Release;..\Build\SDL2_image\Release;C:\VulkanSDK\1.2.141.2\Lib;..\Build\assimp\Release;..\SDK\glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="Events\Event.h" />
     <ClInclude Include="Events\EventHandler.h" />
     <ClInclude Include="Events\WindowEvent.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="GFX\Camera.h" />
+    <ClInclude Include="GFX\Color.h" />
     <ClInclude Include="GFX\MeshRenderer.h" />
+    <ClInclude Include="GFX\Model.h" />
+    <ClInclude Include="GFX\OpenGL\GLBuffer.h" />
+    <ClInclude Include="GFX\OpenGL\GLFBO.h" />
+    <ClInclude Include="GFX\OpenGL\GLMainFBO.h" />
+    <ClInclude Include="GFX\OpenGL\GLRenderInfo.h" />
     <ClInclude Include="GFX\OpenGL\GLRenderer.h" />
-    <ClInclude Include="GFX\Renderer.h" />
+    <ClInclude Include="GFX\OpenGL\GLVAO.h" />
     <ClInclude Include="GFX\RenderInfo.h" />
+    <ClInclude Include="GFX\Renderer.h" />
+    <ClInclude Include="GFX\ScreenCoordinate.h" />
+    <ClInclude Include="GFX\Texture.h" />
+    <ClInclude Include="GFX\Vertex.h" />
     <ClInclude Include="GFX\ViewportRect.h" />
     <ClInclude Include="GFX\Vulkan\Core\VKBuffer.h" />
     <ClInclude Include="GFX\Vulkan\Core\VKImage.h" />
@@ -118,6 +127,9 @@
     <ClInclude Include="GFX\Vulkan\Core\VKState.h" />
     <ClInclude Include="GFX\Vulkan\Core\Vulkan.h" />
     <ClInclude Include="GFX\Vulkan\VKRenderInfo.h" />
+    <ClInclude Include="GFX\Vulkan\VKRenderer.h" />
+    <ClInclude Include="GFX\Vulkan\VKShader.h" />
+    <ClInclude Include="GFX\Vulkan\VKVertex.h" />
     <ClInclude Include="Math\Euler.h" />
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Math\Matrix.h" />
@@ -126,18 +138,13 @@
     <ClInclude Include="Math\Rect.h" />
     <ClInclude Include="Math\Sphere.h" />
     <ClInclude Include="Math\Vector.h" />
-    <ClInclude Include="GFX\Model.h" />
     <ClInclude Include="Objects\Component.h" />
     <ClInclude Include="Objects\GameObject.h" />
     <ClInclude Include="Objects\Transform.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceMgr.h" />
-    <ClInclude Include="GFX\Texture.h" />
     <ClInclude Include="Scenes\Scene.h" />
     <ClInclude Include="Utils.h" />
-    <ClInclude Include="GFX\Vulkan\VKRenderer.h" />
-    <ClInclude Include="GFX\Vulkan\VKShader.h" />
-    <ClInclude Include="GFX\Vulkan\VKVertex.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
@@ -145,9 +152,17 @@
     <ClCompile Include="Events\EventHandler.cpp" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="GFX\Camera.cpp" />
+    <ClCompile Include="GFX\Color.cpp" />
     <ClCompile Include="GFX\MeshRenderer.cpp" />
+    <ClCompile Include="GFX\Model.cpp" />
+    <ClCompile Include="GFX\OpenGL\GLBuffer.cpp" />
+    <ClCompile Include="GFX\OpenGL\GLMainFBO.cpp" />
+    <ClCompile Include="GFX\OpenGL\GLRenderInfo.cpp" />
     <ClCompile Include="GFX\OpenGL\GLRenderer.cpp" />
+    <ClCompile Include="GFX\OpenGL\GLVAO.cpp" />
     <ClCompile Include="GFX\Renderer.cpp" />
+    <ClCompile Include="GFX\ScreenCoordinate.cpp" />
+    <ClCompile Include="GFX\Texture.cpp" />
     <ClCompile Include="GFX\ViewportRect.cpp" />
     <ClCompile Include="GFX\Vulkan\Core\VKBuffer.cpp" />
     <ClCompile Include="GFX\Vulkan\Core\VKImage.cpp" />
@@ -155,6 +170,8 @@
     <ClCompile Include="GFX\Vulkan\Core\VKState.cpp" />
     <ClCompile Include="GFX\Vulkan\Core\Vulkan.cpp" />
     <ClCompile Include="GFX\Vulkan\VKRenderInfo.cpp" />
+    <ClCompile Include="GFX\Vulkan\VKRenderer.cpp" />
+    <ClCompile Include="GFX\Vulkan\VKShader.cpp" />
     <ClCompile Include="Math\Euler.cpp" />
     <ClCompile Include="Math\Matrix2.cpp" />
     <ClCompile Include="Math\Matrix3.cpp" />
@@ -165,30 +182,9 @@
     <ClCompile Include="Math\Vector2.cpp" />
     <ClCompile Include="Math\Vector3.cpp" />
     <ClCompile Include="Math\Vector4.cpp" />
-    <ClCompile Include="GFX\Model.cpp" />
     <ClCompile Include="Objects\Transform.cpp" />
     <ClCompile Include="ResourceMgr.cpp" />
-    <ClCompile Include="GFX\Texture.cpp" />
-    <ClCompile Include="GFX\Vulkan\VKRenderer.cpp" />
-    <ClCompile Include="GFX\Vulkan\VKShader.cpp" />
     <ClCompile Include="Window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SDK\AssImp\build\code\assimp.vcxproj">
-      <Project>{7a0f923a-4d5e-3613-9917-de99a084eaf4}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\SDK\AssImp\build\contrib\zlib\zlibstatic.vcxproj">
-      <Project>{416b6e21-1b18-39f1-bdaa-bde9725e7fdb}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\SDK\SDL2\VisualC\SDLmain\SDLmain.vcxproj">
-      <Project>{da956fd3-e142-46f2-9dd5-c78bebb56b7a}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\SDK\SDL2\VisualC\SDL\SDL.vcxproj">
-      <Project>{81ce8daf-ebb2-4761-8e45-b71abcca8c68}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\SDK\SDL2_image\VisualC\SDL_image.vcxproj">
-      <Project>{2bd5534e-00e2-4bea-ac96-d9a92ea24696}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

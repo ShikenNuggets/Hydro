@@ -23,7 +23,7 @@ VKState::VKState(Window* window_){
 	CreateDebugMessenger();
 	#endif //_DEBUG
 
-	surface = window_->CreateVKSurface(instance.get());
+	surface = window_->VK_CreateSurface(instance.get());
 	SelectPhysicalDevice();
 	CreateLogicalDevice();
 }
@@ -142,7 +142,7 @@ void VKState::CreateLogicalDevice(){
 }
 
 std::vector<const char*> VKState::GetRequiredExtensions(Window* window_){
-	std::vector<const char*> sdlExtensions = window_->GetVKExtensions();
+	std::vector<const char*> sdlExtensions = window_->VK_GetExtensions();
 	std::vector<const char*> extensions(sdlExtensions.data(), sdlExtensions.data() + sdlExtensions.size());
 
 	#ifdef _DEBUG

@@ -20,7 +20,7 @@ externalproject "SDL2main"
 	language "C++"
 	dependson
 	{
-		"SDL2"
+		"SDL2",
 	}
 	
 externalproject "SDL2_image"
@@ -30,8 +30,14 @@ externalproject "SDL2_image"
 	language "C++"
 	dependson
 	{
-		"SDL2"
+		"SDL2",
 	}
+	
+externalproject "assimp"
+	location "SDK/AssImp/build/code"
+	filename "assimp"
+	kind "SharedLib"
+	language "C++"
 
 project "Hydro"
 	location "Hydro"
@@ -44,7 +50,7 @@ project "Hydro"
 	files
 	{
 		"%{prj.name}/**.h",
-		"%{prj.name}/**.cpp"
+		"%{prj.name}/**.cpp",
 	}
 	
 	includedirs
@@ -53,7 +59,10 @@ project "Hydro"
 		"SDK/include",
 		"SDK/SDL2/include",
 		"SDK/SDL2_image/",
-		"C:/VulkanSDK/1.2.141.2/Include"
+		"C:/VulkanSDK/1.2.141.2/Include",
+		"SDK/AssImp/include",
+		"SDK/AssImp/build/include",
+		"SDK/glew/include",
 	}
 	
 	libdirs
@@ -61,27 +70,24 @@ project "Hydro"
 		"Build/SDL2/%{cfg.buildcfg}/",
 		"Build/SDL2main/%{cfg.buildcfg}/",
 		"Build/SDL2_image/%{cfg.buildcfg}/",
-		"C:/VulkanSDK/1.2.141.2/Lib/"
+		"C:/VulkanSDK/1.2.141.2/Lib/",
+		"Build/assimp/%{cfg.buildcfg}/",
+		"SDK/glew/lib/Release/x64",
 	}
 	
-	links
-	{
-		"SDL2.lib",
-		"SDL2main.lib",
-		"SDL2_image.lib",
-		"vulkan-1.lib"
-	}
+	
 	
 	dependson
 	{
 		"SDL2",
 		"SDL2main",
-		"SDL2_image"
+		"SDL2_image",
+		"assimp",
 	}
 	
 	flags
 	{
-		"MultiProcessorCompile"
+		"MultiProcessorCompile",
 	}
 	
 	filter "system:windows"
@@ -91,7 +97,7 @@ project "Hydro"
 		
 		defines
 		{
-			"HYDRO_PLATFORM_WIN32"
+			"HYDRO_PLATFORM_WIN32",
 		}
 		
 	filter "configurations:Debug"
@@ -104,7 +110,7 @@ project "Hydro"
 		
 		flags
 		{
-			"LinkTimeOptimization"
+			"LinkTimeOptimization",
 		}
 		
 project "Game"
@@ -119,7 +125,7 @@ project "Game"
 	files
 	{
 		"%{prj.name}/**.h",
-		"%{prj.name}/**.cpp"
+		"%{prj.name}/**.cpp",
 	}
 	
 	includedirs
@@ -130,6 +136,9 @@ project "Game"
 		"SDK/SDL2/include/",
 		"SDK/SDL2_image/",
 		"C:/VulkanSDK/1.2.141.2/Include/",
+		"SDK/AssImp/include",
+		"SDK/AssImp/build/include",
+		"SDK/glew/include",
 	}
 	
 	libdirs
@@ -138,7 +147,9 @@ project "Game"
 		"Build/SDL2/%{cfg.buildcfg}/",
 		"Build/SDL2main/%{cfg.buildcfg}/",
 		"Build/SDL2_image/%{cfg.buildcfg}/",
-		"C:/VulkanSDK/1.2.141.2/Lib/"
+		"C:/VulkanSDK/1.2.141.2/Lib/",
+		"Build/assimp/%{cfg.buildcfg}/",
+		"SDK/glew/lib/Release/x64",
 	}
 	
 	links
@@ -147,7 +158,10 @@ project "Game"
 		"SDL2.lib",
 		"SDL2main.lib",
 		"SDL2_image.lib",
-		"vulkan-1.lib"
+		"vulkan-1.lib",
+		"assimp.lib",
+		"glew32s.lib",
+		"opengl32.lib",
 	}
 	
 	dependson
@@ -155,7 +169,8 @@ project "Game"
 		"Hydro",
 		"SDL2",
 		"SDL2main",
-		"SDL2_image"
+		"SDL2_image",
+		"assimp",
 	}
 	
 	flags
@@ -170,14 +185,15 @@ project "Game"
 		
 		defines
 		{
-			"HYDRO_PLATFORM_WIN32"
+			"HYDRO_PLATFORM_WIN32",
 		}
 		
 		postbuildcommands
 		{
 			"echo D|xcopy \"$(SolutionDir)Build\\SDL2\\$(Configuration)\\*.*\" \"$(TargetDir)\" /y /E",
 			"echo D|xcopy \"$(SolutionDir)Build\\SDL2_image\\$(Configuration)\\*.*\" \"$(TargetDir)\" /y /E",
-			"echo D|xcopy \"$(SolutionDir)Resources\\*.*\" \"$(TargetDir)Resources\" /y /E"
+			"echo D|xcopy \"$(SolutionDir)Build\\assimp\\$(Configuration)\\*.*\" \"$(TargetDir)\" /y /E",
+			"echo D|xcopy \"$(SolutionDir)Resources\\*.*\" \"$(TargetDir)Resources\" /y /E",
 		}
 		
 	filter "configurations:Debug"

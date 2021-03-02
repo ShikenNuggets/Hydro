@@ -4,22 +4,116 @@
     <Filter Include="Events">
       <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GFX">
+      <UniqueIdentifier>{4AEA870B-B6F3-877C-3F6F-9E7CAB77937C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GFX\OpenGL">
+      <UniqueIdentifier>{3EDCA047-2A94-E294-939B-BBF07F727D85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GFX\Vulkan">
+      <UniqueIdentifier>{8A405358-76F8-94A5-DFFF-6D01CBD62F96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GFX\Vulkan\Core">
+      <UniqueIdentifier>{224BBC13-8ED6-29D8-97E7-ACCC03F285D8}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{AFF4887C-9B2B-8A0D-4418-7010302E060F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Vulkan">
-      <UniqueIdentifier>{D6EAFCD8-C28C-27AF-AB47-3B039788AEFF}</UniqueIdentifier>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{CF2649B1-3B06-C84C-441E-5323B07C2EAE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scenes">
+      <UniqueIdentifier>{86EEB3D0-7290-DEA6-5B4B-F2FA478C65F7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="Events\Event.h">
+      <Filter>Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Events\EventHandler.h">
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="Events\WindowEvent.h">
       <Filter>Events</Filter>
     </ClInclude>
     <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="GFX\Camera.h">
+      <Filter>GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Color.h">
+      <Filter>GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\MeshRenderer.h">
+      <Filter>GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Model.h">
+      <Filter>GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\OpenGL\GLBuffer.h">
+      <Filter>GFX\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\OpenGL\GLFBO.h">
+      <Filter>GFX\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\OpenGL\GLMainFBO.h">
+      <Filter>GFX\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\OpenGL\GLRenderInfo.h">
+      <Filter>GFX\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\OpenGL\GLRenderer.h">
+      <Filter>GFX\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\OpenGL\GLVAO.h">
+      <Filter>GFX\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\RenderInfo.h">
+      <Filter>GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Renderer.h">
+      <Filter>GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\ScreenCoordinate.h">
+      <Filter>GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Texture.h">
+      <Filter>GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Vertex.h">
+      <Filter>GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\ViewportRect.h">
+      <Filter>GFX</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Vulkan\Core\VKBuffer.h">
+      <Filter>GFX\Vulkan\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Vulkan\Core\VKImage.h">
+      <Filter>GFX\Vulkan\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Vulkan\Core\VKPipeline.h">
+      <Filter>GFX\Vulkan\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Vulkan\Core\VKState.h">
+      <Filter>GFX\Vulkan\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Vulkan\Core\Vulkan.h">
+      <Filter>GFX\Vulkan\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Vulkan\VKRenderInfo.h">
+      <Filter>GFX\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Vulkan\VKRenderer.h">
+      <Filter>GFX\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Vulkan\VKShader.h">
+      <Filter>GFX\Vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="GFX\Vulkan\VKVertex.h">
+      <Filter>GFX\Vulkan</Filter>
+    </ClInclude>
     <ClInclude Include="Math\Euler.h">
       <Filter>Math</Filter>
     </ClInclude>
@@ -44,42 +138,92 @@
     <ClInclude Include="Math\Vector.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Objects\Component.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\GameObject.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Objects\Transform.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceMgr.h" />
+    <ClInclude Include="Scenes\Scene.h">
+      <Filter>Scenes</Filter>
+    </ClInclude>
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Window.h" />
-    <ClInclude Include="Events\EventHandler.h" />
-    <ClInclude Include="Objects\GameObject.h" />
-    <ClInclude Include="Objects\Transform.h" />
-    <ClInclude Include="Objects\Component.h" />
-    <ClInclude Include="GFX\MeshRenderer.h" />
-    <ClInclude Include="GFX\Model.h" />
-    <ClInclude Include="GFX\Texture.h" />
-    <ClInclude Include="GFX\Camera.h" />
-    <ClInclude Include="GFX\ViewportRect.h" />
-    <ClInclude Include="GFX\Renderer.h" />
-    <ClInclude Include="GFX\Vulkan\VKRenderer.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="GFX\Vulkan\VKShader.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="GFX\Vulkan\VKVertex.h">
-      <Filter>Vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Scenes\Scene.h" />
-    <ClInclude Include="GFX\RenderInfo.h" />
-    <ClInclude Include="GFX\Vulkan\VKRenderInfo.h" />
-    <ClInclude Include="GFX\Vulkan\Core\VKBuffer.h" />
-    <ClInclude Include="GFX\Vulkan\Core\VKImage.h" />
-    <ClInclude Include="GFX\Vulkan\Core\VKPipeline.h" />
-    <ClInclude Include="GFX\Vulkan\Core\VKState.h" />
-    <ClInclude Include="GFX\Vulkan\Core\Vulkan.h" />
-    <ClInclude Include="GFX\OpenGL\GLRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Events\EventHandler.cpp">
+      <Filter>Events</Filter>
+    </ClCompile>
     <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="GFX\Camera.cpp">
+      <Filter>GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Color.cpp">
+      <Filter>GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\MeshRenderer.cpp">
+      <Filter>GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Model.cpp">
+      <Filter>GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\OpenGL\GLBuffer.cpp">
+      <Filter>GFX\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\OpenGL\GLMainFBO.cpp">
+      <Filter>GFX\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\OpenGL\GLRenderInfo.cpp">
+      <Filter>GFX\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\OpenGL\GLRenderer.cpp">
+      <Filter>GFX\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\OpenGL\GLVAO.cpp">
+      <Filter>GFX\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Renderer.cpp">
+      <Filter>GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\ScreenCoordinate.cpp">
+      <Filter>GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Texture.cpp">
+      <Filter>GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\ViewportRect.cpp">
+      <Filter>GFX</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Vulkan\Core\VKBuffer.cpp">
+      <Filter>GFX\Vulkan\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Vulkan\Core\VKImage.cpp">
+      <Filter>GFX\Vulkan\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Vulkan\Core\VKPipeline.cpp">
+      <Filter>GFX\Vulkan\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Vulkan\Core\VKState.cpp">
+      <Filter>GFX\Vulkan\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Vulkan\Core\Vulkan.cpp">
+      <Filter>GFX\Vulkan\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Vulkan\VKRenderInfo.cpp">
+      <Filter>GFX\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Vulkan\VKRenderer.cpp">
+      <Filter>GFX\Vulkan</Filter>
+    </ClCompile>
+    <ClCompile Include="GFX\Vulkan\VKShader.cpp">
+      <Filter>GFX\Vulkan</Filter>
+    </ClCompile>
     <ClCompile Include="Math\Euler.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -110,28 +254,10 @@
     <ClCompile Include="Math\Vector4.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="Objects\Transform.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
     <ClCompile Include="ResourceMgr.cpp" />
     <ClCompile Include="Window.cpp" />
-    <ClCompile Include="Events\EventHandler.cpp" />
-    <ClCompile Include="GFX\Model.cpp" />
-    <ClCompile Include="GFX\Texture.cpp" />
-    <ClCompile Include="GFX\MeshRenderer.cpp" />
-    <ClCompile Include="GFX\Camera.cpp" />
-    <ClCompile Include="GFX\ViewportRect.cpp" />
-    <ClCompile Include="Objects\Transform.cpp" />
-    <ClCompile Include="GFX\Renderer.cpp" />
-    <ClCompile Include="GFX\Vulkan\VKRenderer.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="GFX\Vulkan\VKShader.cpp">
-      <Filter>Vulkan</Filter>
-    </ClCompile>
-    <ClCompile Include="GFX\Vulkan\VKRenderInfo.cpp" />
-    <ClCompile Include="GFX\Vulkan\Core\VKBuffer.cpp" />
-    <ClCompile Include="GFX\Vulkan\Core\VKImage.cpp" />
-    <ClCompile Include="GFX\Vulkan\Core\VKPipeline.cpp" />
-    <ClCompile Include="GFX\Vulkan\Core\VKState.cpp" />
-    <ClCompile Include="GFX\Vulkan\Core\Vulkan.cpp" />
-    <ClCompile Include="GFX\OpenGL\GLRenderer.cpp" />
   </ItemGroup>
 </Project>

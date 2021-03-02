@@ -20,6 +20,7 @@ namespace Hydro{
 	private:
 		friend class Renderer;
 		friend class VKRenderer;
+		friend class GLRenderer;
 
 		Model* model;
 		Texture* texture;

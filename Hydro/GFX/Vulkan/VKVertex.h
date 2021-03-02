@@ -5,14 +5,15 @@
 
 #include <vulkan/vulkan.hpp>
 
+#include "GFX/Color.h"
 #include "Math/Vector.h"
 
 namespace Hydro{
 	struct VKVertex{
-		VKVertex(const Vector3& pos_, const Vector3& color_, const Vector2& texCoords_) : pos(pos_), color(color_), texCoords(texCoords_){}
+		VKVertex(const Vector3& pos_, const Color& color_, const Vector2& texCoords_) : pos(pos_), color(color_), texCoords(texCoords_){}
 
 		Vector3 pos;
-		Vector3 color; //TODO - Use special Color struct
+		Color color;
 		Vector2 texCoords;
 
 		static vk::VertexInputBindingDescription GetBindingDescription(){

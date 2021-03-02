@@ -27,7 +27,7 @@ const bool enableValidationLayers = false;
 const bool enableValidationLayers = true;
 #endif
 
-VKRenderer::VKRenderer(Window* window_) : window(window_), swapChain(nullptr), swapChainImages(), currentFrame(0), msaaSamples(vk::SampleCountFlagBits::e1){
+VKRenderer::VKRenderer(Window* window_) : Renderer(window_), swapChain(nullptr), swapChainImages(), currentFrame(0), msaaSamples(vk::SampleCountFlagBits::e1){
 	Vulkan::state = new VKState(window_);
 	
 	msaaSamples = Vulkan::GetMaxUsableSampleCount();
@@ -506,7 +506,7 @@ void VKRenderer::CopyBuffer(VKBuffer* sourceBuffer, VKBuffer* destBuffer, vk::De
 	EndSingleTimeCommand(commandBuffer);
 }
 
-VKBuffer* VKRenderer::CreateVertexBuffer(const std::vector<VKVertex>& vertices_){
+VKBuffer* VKRenderer::CreateVertexBuffer(const std::vector<Vertex>& vertices_){
 	vk::DeviceSize bufferSize = sizeof(vertices_[0]) * vertices_.size();
 	VKBuffer stagingBuffer = VKBuffer(Vulkan::Device(), bufferSize, vk::BufferUsageFlagBits::eTransferSrc, vk::MemoryPropertyFlagBits::eHostVisible | vk::MemoryPropertyFlagBits::eHostCoherent);
 	stagingBuffer.MapMemory(vertices_.data(), bufferSize);

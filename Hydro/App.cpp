@@ -43,7 +43,7 @@ App::~App(){
 
 void App::Initialize(){
 	Debug::Log("App startup");
-	window = new Window();
+	window = new Window(API::Vulkan);
 	resourceMgr = new ResourceMgr();
 	renderer = new VKRenderer(window);
 	
