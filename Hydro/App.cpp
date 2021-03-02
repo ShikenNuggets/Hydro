@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Debug.h"
+
 using namespace Hydro;
 
 App* App::instance = nullptr;
@@ -27,7 +29,7 @@ App::App() : window(nullptr), resourceMgr(nullptr), renderer(nullptr){
 }
 
 App::~App(){
-	std::cout << "App shutdown" << std::endl; //TODO - Debug logging
+	Debug::Log("App shutdown");
 	if(renderer != nullptr){
 		delete renderer;
 		renderer = nullptr;
@@ -40,7 +42,7 @@ App::~App(){
 }
 
 void App::Initialize(){
-	std::cout << "App startup" << std::endl; //TODO - Debug logging
+	Debug::Log("App startup");
 	window = new Window();
 	resourceMgr = new ResourceMgr();
 	renderer = new VKRenderer(window);
