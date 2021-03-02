@@ -108,6 +108,7 @@
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="GFX\Camera.h" />
     <ClInclude Include="GFX\MeshRenderer.h" />
+    <ClInclude Include="GFX\OpenGL\GLRenderer.h" />
     <ClInclude Include="GFX\Renderer.h" />
     <ClInclude Include="GFX\RenderInfo.h" />
     <ClInclude Include="GFX\ViewportRect.h" />
@@ -145,6 +146,7 @@
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="GFX\Camera.cpp" />
     <ClCompile Include="GFX\MeshRenderer.cpp" />
+    <ClCompile Include="GFX\OpenGL\GLRenderer.cpp" />
     <ClCompile Include="GFX\Renderer.cpp" />
     <ClCompile Include="GFX\ViewportRect.cpp" />
     <ClCompile Include="GFX\Vulkan\Core\VKBuffer.cpp" />
