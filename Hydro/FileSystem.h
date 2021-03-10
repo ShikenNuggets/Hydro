@@ -25,6 +25,8 @@ namespace Hydro{
 
 		static void ReadRecords(std::string file_, std::map<std::string, std::map<std::string, std::string>>& records_);
 		static void WriteRecords(std::string file_, const std::map<std::string, std::map<std::string, std::string>>& records_, WriteType type_ = WriteType::clear);
+
+		static std::string GetFileNameFromPath(const std::string& path_);
 	};
 }
 

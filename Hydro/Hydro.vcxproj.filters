@@ -154,6 +154,8 @@
     </ClInclude>
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="GFX\OpenGL\GLShader.h" />
+    <ClInclude Include="GFX\OpenGL\GLTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
@@ -259,5 +261,7 @@
     </ClCompile>
     <ClCompile Include="ResourceMgr.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="GFX\OpenGL\GLShader.cpp" />
+    <ClCompile Include="GFX\OpenGL\GLTexture.cpp" />
   </ItemGroup>
 </Project>

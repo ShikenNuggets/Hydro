@@ -114,6 +114,8 @@
     <ClInclude Include="GFX\OpenGL\GLMainFBO.h" />
     <ClInclude Include="GFX\OpenGL\GLRenderInfo.h" />
     <ClInclude Include="GFX\OpenGL\GLRenderer.h" />
+    <ClInclude Include="GFX\OpenGL\GLShader.h" />
+    <ClInclude Include="GFX\OpenGL\GLTexture.h" />
     <ClInclude Include="GFX\OpenGL\GLVAO.h" />
     <ClInclude Include="GFX\RenderInfo.h" />
     <ClInclude Include="GFX\Renderer.h" />
@@ -159,6 +161,8 @@
     <ClCompile Include="GFX\OpenGL\GLMainFBO.cpp" />
     <ClCompile Include="GFX\OpenGL\GLRenderInfo.cpp" />
     <ClCompile Include="GFX\OpenGL\GLRenderer.cpp" />
+    <ClCompile Include="GFX\OpenGL\GLShader.cpp" />
+    <ClCompile Include="GFX\OpenGL\GLTexture.cpp" />
     <ClCompile Include="GFX\OpenGL\GLVAO.cpp" />
     <ClCompile Include="GFX\Renderer.cpp" />
     <ClCompile Include="GFX\ScreenCoordinate.cpp" />

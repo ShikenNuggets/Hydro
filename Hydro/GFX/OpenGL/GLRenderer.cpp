@@ -7,10 +7,21 @@
 using namespace Hydro;
 
 GLRenderer::GLRenderer(Window* window_) : Renderer(window_), mainFBO(nullptr){
-	Debug::Assert(FileSystem::FileExists(sharedShaderName));
+	window->GL_CreateContext();
 
-	sharedShaderCode = FileSystem::ReadFileToString(sharedShaderName);
-	Debug::Assert(!sharedShaderCode.empty());
+	GLenum err = glewInit();
+	if(err != GLEW_OK){
+		//Reinterpret cast allows us to convert a GLubyte to a const char*
+		//This is unfortunately the only way to do this
+		Debug::LogError("GLEW could not be initialized! GLEW Error: " + std::string(reinterpret_cast<const char*>(glewGetErrorString(err))), __FILE__, __LINE__);
+		throw std::exception("GLEW could not be initialized!");
+	}
+	
+
+	//Debug::Assert(FileSystem::FileExists(sharedShaderName));
+
+	//sharedShaderCode = FileSystem::ReadFileToString(sharedShaderName);
+	//Debug::Assert(!sharedShaderCode.empty());
 
 	//Print out the graphics card being used
 	std::string gpuName = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
@@ -108,7 +119,7 @@ void GLRenderer::Render(){
 		SetViewport(cam->GetViewportRect());
 
 		for(MeshRenderer* mesh : meshes){
-			dynamic_cast<GLRenderInfo*>(mesh->renderInfo)->Render();
+			dynamic_cast<GLRenderInfo*>(mesh->renderInfo)->Render(Matrix4::Identity(), cam->GetViewMatrix(), cam->GetProjectionMatrix());
 		}
 	}
 

@@ -6,66 +6,58 @@
 
 #include <SDL.h>
 
+#include "FileSystem.h"
+
 namespace Hydro{
 	class Debug{
 	public:
 		inline static void Assert(bool condition_){
-			#ifdef _DEBUG
+			#ifdef HYDRO_DEBUG
 			_ASSERT(condition_);
-			#endif //_DEBUG
+			#endif //HYDRO_DEBUG
 		}
 
 		inline static void Assert(bool condition_, const std::string& message_){
-			#ifdef _DEBUG
+			#ifdef HYDRO_DEBUG
 			if(!condition_){
 				SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Assert failed!", message_.c_str(), nullptr);
 				__debugbreak();
 			}
-			#endif //_DEBUG
+			#endif //HYDRO_DEBUG
 		}
 
 		inline static void Log(const std::string& message_){
-			#ifdef _DEBUG
+			#ifdef HYDRO_DEBUG
 			LogMessage(message_);
-			#endif //_DEBUG
+			#endif //HYDRO_DEBUG
 		}
 
 		inline static void Log(const std::string& message_, const char* file_, int line_){
-			#ifdef _DEBUG
-			LogMessage(message_ + "[" + file_ + " : " + std::to_string(line_) + "]");
-			#endif //_DEBUG
+			#ifdef HYDRO_DEBUG
+			LogMessage(message_ + " [" + FileSystem::GetFileNameFromPath(file_) + " : " + std::to_string(line_) + "]");
+			#endif //HYDRO_DEBUG
 		}
 
 		inline static void LogWarning(const std::string& message_){
-			#ifdef _DEBUG
 			LogMessage("WARNING: " + message_);
-			#endif //_DEBUG
 		}
 
 		inline static void LogWarning(const std::string& message_, const char* file_, int line_){
-			#ifdef _DEBUG
-			LogMessage("WARNING: " + message_ + "[" + file_ + " : " + std::to_string(line_) + "]");
-			#endif //_DEBUG
+			LogMessage("WARNING: " + message_ + " [" + FileSystem::GetFileNameFromPath(file_) + " : " + std::to_string(line_) + "]");
 		}
 
 		inline static void LogError(const std::string& message_){
-			#ifdef _DEBUG
 			LogMessage("ERROR: " + message_);
-			#endif //_DEBUG
 		}
 
 		inline static void LogError(const std::string& message_, const char* file_, int line_){
-			#ifdef _DEBUG
-			LogMessage("ERROR: " + message_ + "[" + file_ + " : " + std::to_string(line_) + "]");
-			#endif //_DEBUG
+			LogMessage("ERROR: " + message_ + " [" + FileSystem::GetFileNameFromPath(file_) + " : " + std::to_string(line_) + "]");
 		}
 
 	private:
 		inline static void LogMessage(const std::string& message_){
-			#ifdef _DEBUG
 			std::cout << message_ << std::endl;
 			//TODO - Output to file, and... whatever else we should do here
-			#endif //_DEBUG
 		}
 	};
 }

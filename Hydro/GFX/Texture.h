@@ -17,6 +17,7 @@ namespace Hydro{
 		int Height() const{ return surface->h; };
 		size_t Size() const{ return static_cast<size_t>(surface->h) * static_cast<size_t>(surface->pitch); };
 		void* Pixels() const{ return surface->pixels; };
+		int BytesPerPixel() const{ return surface->format->BytesPerPixel; }
 
 	private:
 		SDL_Surface* surface;

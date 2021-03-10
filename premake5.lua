@@ -75,8 +75,6 @@ project "Hydro"
 		"SDK/glew/lib/Release/x64",
 	}
 	
-	
-	
 	dependson
 	{
 		"SDL2",
@@ -160,7 +158,7 @@ project "Game"
 		"SDL2_image.lib",
 		"vulkan-1.lib",
 		"assimp.lib",
-		"glew32s.lib",
+		"glew32.lib",
 		"opengl32.lib",
 	}
 	
@@ -193,6 +191,7 @@ project "Game"
 			"echo D|xcopy \"$(SolutionDir)Build\\SDL2\\$(Configuration)\\*.*\" \"$(TargetDir)\" /y /E",
 			"echo D|xcopy \"$(SolutionDir)Build\\SDL2_image\\$(Configuration)\\*.*\" \"$(TargetDir)\" /y /E",
 			"echo D|xcopy \"$(SolutionDir)Build\\assimp\\$(Configuration)\\*.*\" \"$(TargetDir)\" /y /E",
+			"echo D|xcopy \"$(SolutionDir)SDK\\glew\\bin\\Release\\$(Platform)\\glew32.dll\" \"$(TargetDir)\" /y /E",
 			"echo D|xcopy \"$(SolutionDir)Resources\\*.*\" \"$(TargetDir)Resources\" /y /E",
 		}
 		

@@ -38,6 +38,8 @@ namespace Hydro{
 			return nullptr;
 		}
 
+		Transform& GetTransform(){ return transform; }
+
 	private:
 		Transform transform;
 		std::vector<Component*> components;

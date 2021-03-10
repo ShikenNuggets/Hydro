@@ -71,7 +71,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Hydro.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;vulkan-1.lib;assimp.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Hydro.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;vulkan-1.lib;assimp.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Build\Hydro\Debug;..\Build\SDL2\Debug;..\Build\SDL2main\Debug;..\Build\SDL2_image\Debug;C:\VulkanSDK\1.2.141.2\Lib;..\Build\assimp\Debug;..\SDK\glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Manifest>
@@ -81,6 +81,7 @@
       <Command>echo D|xcopy "$(SolutionDir)Build\SDL2\$(Configuration)\*.*" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Build\SDL2_image\$(Configuration)\*.*" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Build\assimp\$(Configuration)\*.*" "$(TargetDir)" /y /E
+echo D|xcopy "$(SolutionDir)SDK\glew\bin\Release\$(Platform)\glew32.dll" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)Resources" /y /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -103,7 +104,7 @@ echo D|xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)Resources" /y /E</Comman
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Hydro.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;vulkan-1.lib;assimp.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Hydro.lib;SDL2.lib;SDL2main.lib;SDL2_image.lib;vulkan-1.lib;assimp.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Build\Hydro\Release;..\Build\SDL2\Release;..\Build\SDL2main\Release;..\Build\SDL2_image\Release;C:\VulkanSDK\1.2.141.2\Lib;..\Build\assimp\Release;..\SDK\glew\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Manifest>
@@ -113,6 +114,7 @@ echo D|xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)Resources" /y /E</Comman
       <Command>echo D|xcopy "$(SolutionDir)Build\SDL2\$(Configuration)\*.*" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Build\SDL2_image\$(Configuration)\*.*" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Build\assimp\$(Configuration)\*.*" "$(TargetDir)" /y /E
+echo D|xcopy "$(SolutionDir)SDK\glew\bin\Release\$(Platform)\glew32.dll" "$(TargetDir)" /y /E
 echo D|xcopy "$(SolutionDir)Resources\*.*" "$(TargetDir)Resources" /y /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

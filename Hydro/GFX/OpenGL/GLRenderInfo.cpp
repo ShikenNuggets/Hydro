@@ -4,7 +4,7 @@
 
 using namespace Hydro;
 
-GLRenderInfo::GLRenderInfo(Model* model_, Texture* texture_) : RenderInfo(model_, texture_), vao(), vbo(GL_ARRAY_BUFFER), ebo(GL_ELEMENT_ARRAY_BUFFER){
+GLRenderInfo::GLRenderInfo(Model* model_, Texture* texture_) : RenderInfo(model_, texture_), vao(), vbo(GL_ARRAY_BUFFER), ebo(GL_ELEMENT_ARRAY_BUFFER), texture(texture_), shader("Resources\\Shaders\\triangle.vert", "Resources\\Shaders\\triangle.frag"){
 	Debug::Assert(model_ != nullptr && texture_ != nullptr);
 
 	vao.Bind();
@@ -23,7 +23,13 @@ GLRenderInfo::GLRenderInfo(Model* model_, Texture* texture_) : RenderInfo(model_
 	ebo.Unbind();
 }
 
-void GLRenderInfo::Render(){
+void GLRenderInfo::Render(const Matrix4& model_, const Matrix4& view_, const Matrix4& proj_){
+	shader.Bind();
+	shader.BindMatrix4("ubo.model", model_);
+	shader.BindMatrix4("ubo.view", view_);
+	shader.BindMatrix4("ubo.proj", proj_);
+	shader.BindTexture("texSampler", texture.TextureID());
+
 	//Bind the VAO that you want to use for drawing
 	vao.Bind();
 	ebo.Bind();
@@ -34,4 +40,6 @@ void GLRenderInfo::Render(){
 	//Clear the vertex array for future use
 	vao.Unbind();
 	ebo.Unbind();
+
+	shader.Unbind();
 }

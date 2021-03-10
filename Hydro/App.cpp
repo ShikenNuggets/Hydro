@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Debug.h"
+#include "GFX/OpenGL/GLRenderer.h"
 
 using namespace Hydro;
 

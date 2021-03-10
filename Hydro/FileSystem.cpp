@@ -169,3 +169,17 @@ void FileSystem::WriteRecords(std::string file_, const std::map<std::string, std
 
 	filestream.close();
 }
+
+std::string FileSystem::GetFileNameFromPath(const std::string& path_){
+	char sep = '/';
+
+	#ifdef HYDRO_PLATFORM_WIN32
+	sep = '\\';
+	#endif
+
+	size_t i = path_.rfind(sep, path_.length());
+	if(i != std::string::npos){
+		return(path_.substr(i + 1, path_.length() - i));
+	}
+	return "";
+}
