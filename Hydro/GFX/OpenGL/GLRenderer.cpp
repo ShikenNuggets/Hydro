@@ -6,7 +6,7 @@
 
 using namespace Hydro;
 
-GLRenderer::GLRenderer(Window* window_) : Renderer(window_), mainFBO(nullptr){
+GLRenderer::GLRenderer(Window* window_) : Renderer(window_), mainFBO(nullptr), postVAO(nullptr), postVBO(nullptr){
 	window->GL_CreateContext();
 
 	GLenum err = glewInit();
@@ -16,7 +16,6 @@ GLRenderer::GLRenderer(Window* window_) : Renderer(window_), mainFBO(nullptr){
 		Debug::LogError("GLEW could not be initialized! GLEW Error: " + std::string(reinterpret_cast<const char*>(glewGetErrorString(err))), __FILE__, __LINE__);
 		throw std::exception("GLEW could not be initialized!");
 	}
-	
 
 	//Debug::Assert(FileSystem::FileExists(sharedShaderName));
 
@@ -58,7 +57,31 @@ GLRenderer::GLRenderer(Window* window_) : Renderer(window_), mainFBO(nullptr){
 	//	return false;
 	//}
 
-	//mainFBO = new GLMainFBO(window->Size());
+	mainFBO = new GLMainFBO(window->Size());
+
+	//Initialize post-processing layer
+	postShader = new GLShader("Resources\\Shaders\\screen.vert", "Resources\\Shaders\\screen.frag"); //TODO - ResourceMgr
+	postShader->Bind();
+	postShader->BindInt("screenTexture", 0);
+
+	postVAO = new GLVAO();
+	postVBO = new GLBuffer(GL_ARRAY_BUFFER);
+
+	constexpr float quadVertices[] = {
+		//positions      //texCoords
+		-1.0f,  1.0f,	  0.0f, 1.0f,
+		-1.0f, -1.0f,	  0.0f, 0.0f,
+		1.0f, -1.0f,	  1.0f, 0.0f,
+		-1.0f,  1.0f,     0.0f, 1.0f,
+		1.0f, -1.0f,     1.0f, 0.0f,
+		1.0f,  1.0f,     1.0f, 1.0f
+	};
+
+	postVAO->Bind();
+	postVBO->Bind();
+	postVBO->SetBufferData(sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	postVAO->SetupVertexAttribute(0, 2, 4 * sizeof(float), (GLvoid*)(0));
+	postVAO->SetupVertexAttribute(1, 2, 4 * sizeof(float), (GLvoid*)(2 * sizeof(float)));
 
 	//if(PostProcessing::Initialize("ScreenShader") == false){
 	//	Debug::LogError("PostProcessing could not be initialized!", __FILE__, __LINE__);
@@ -100,10 +123,15 @@ GLRenderer::~GLRenderer(){
 
 	PostProcessing::Destroy();*/
 
-	//if(mainFBO != nullptr){
-	//	delete mainFBO;
-	//	mainFBO = nullptr;
-	//}
+	if(postShader != nullptr){
+		delete postShader;
+		postShader = nullptr;
+	}
+
+	if(mainFBO != nullptr){
+		delete mainFBO;
+		mainFBO = nullptr;
+	}
 
 	/*if(multisampleFBO != nullptr){
 		multisampleFBO->Destroy();
@@ -125,7 +153,7 @@ void GLRenderer::Render(){
 
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	//mainFBO->Bind();
+	mainFBO->Bind();
 	//for(Camera* cam : cameras){
 	//	SetViewport(cam->GetViewportRect());
 
@@ -141,17 +169,29 @@ void GLRenderer::Render(){
 	//Reset the viewport to fullscreen before rendering UI
 	SetViewport(ViewportRect::fullScreen);
 
-	//mainFBO->Unbind();
+	mainFBO->Unbind();
 
-	//PostProcessing::DoPostProcessing(info.depthMap); 
-	//PostProcessing::DoPostProcessing(postProcessFBO->GetColorTexture());
+	//Setup Post-Processing
+	SetViewport(ViewportRect(0, 0, window->Width(), window->Height()));
+	postVAO->Bind();
+	glDisable(GL_DEPTH_TEST);
+	postShader->Bind();
+
+	//Do Post-Processing
+	postShader->BindTexture("screenTexture", mainFBO->GetColorTexture());
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	//End Post-Processing
+	glEnable(GL_DEPTH_TEST);
+	postVAO->Unbind();
+	postShader->Unbind();
 
 	//print out the id of the frame buffer being used
 		/*GLint result;
 		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &result);
 		std::cout << "FrameBuffer being used: " << result << std::endl;*/
 
-		//Update the window to show the new rendered frame
+	//Update the window to show the new rendered frame
 	window->GL_UpdateWindow();
 }
 
@@ -171,11 +211,11 @@ void GLRenderer::OnResize(int width_, int height_){
 		Debug::LogError("Multi sampling FBO could not be initialized!", __FILE__, __LINE__);
 	}*/
 
-	//if(mainFBO != nullptr){
-	//	delete mainFBO;
-	//	mainFBO = nullptr;
-	//}
-	//mainFBO = new GLMainFBO(window->Size());
+	if(mainFBO != nullptr){
+		delete mainFBO;
+		mainFBO = nullptr;
+	}
+	mainFBO = new GLMainFBO(window->Size());
 
 	for(Camera* cam : cameras){
 		cam->Reset();

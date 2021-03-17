@@ -44,9 +44,9 @@ App::~App(){
 
 void App::Initialize(){
 	Debug::Log("App startup");
-	window = new Window(API::Vulkan);
+	window = new Window(API::OpenGL);
 	resourceMgr = new ResourceMgr();
-	renderer = new VKRenderer(window);
+	renderer = new GLRenderer(window);
 	
 	currentScene = new Scene();
 }

@@ -5,6 +5,9 @@
 
 #include "GFX/Renderer.h"
 #include "GFX/OpenGL/GLMainFBO.h"
+#include "GFX/OpenGL/GLShader.h"
+#include "GFX/OpenGL/GLVAO.h"
+#include "GFX/OpenGL/GLBuffer.h"
 
 namespace Hydro{
 	class GLRenderer : public Renderer{
@@ -22,6 +25,10 @@ namespace Hydro{
 		std::string sharedShaderName;
 		std::string sharedShaderCode;
 		GLMainFBO* mainFBO;
+
+		GLShader* postShader;
+		GLVAO* postVAO;
+		GLBuffer* postVBO;
 
 		void ClearScreen();
 		void SetClearColor(const Color& color_);
