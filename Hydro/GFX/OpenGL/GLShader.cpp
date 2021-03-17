@@ -151,7 +151,7 @@ void GLShader::Unbind(){
 
 GLuint GLShader::GetUniformID(const std::string& uniformName_) const{
 	_ASSERT(!uniformName_.empty());
-	_ASSERT(glGetUniformLocation(shader, uniformName_.c_str()) != -1);
+	_ASSERT(glGetUniformLocation(shader, uniformName_.c_str()) != GL_INVALID_INDEX);
 	return glGetUniformLocation(shader, uniformName_.c_str());
 }
 
