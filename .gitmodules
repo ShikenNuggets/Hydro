@@ -1,6 +1,6 @@
 [submodule "SDK/AssImp"]
 	path = SDK/AssImp
-	url = https://github.com/assimp/assimp.git
+	url = https://github.com/ShikenNuggets/assimp.git
 [submodule "SDK/SDL2"]
 	path = SDK/SDL2
 	url = https://github.com/libsdl-org/SDL
