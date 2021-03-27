@@ -34,7 +34,7 @@ externalproject "SDL2_image"
 	}
 	
 externalproject "zlibstatic"
-	location "SDK\AssImp\build\contrib\zlib"
+	location "SDK/AssImp/build/contrib/zlib"
 	filename "zlibstatic"
 	kind "StaticLib"
 	language "C++"
