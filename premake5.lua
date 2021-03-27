@@ -81,6 +81,7 @@ project "Hydro"
 		"Build/SDL2main/%{cfg.buildcfg}/",
 		"Build/SDL2_image/%{cfg.buildcfg}/",
 		"C:/VulkanSDK/1.2.141.2/Lib/",
+		"Build/zlibstatic/%{cfg.buildcfg}/",
 		"Build/assimp/%{cfg.buildcfg}/",
 		"SDK/glew/lib/Release/x64",
 	}
@@ -156,6 +157,7 @@ project "Game"
 		"Build/SDL2main/%{cfg.buildcfg}/",
 		"Build/SDL2_image/%{cfg.buildcfg}/",
 		"C:/VulkanSDK/1.2.141.2/Lib/",
+		"Build/zlibstatic/%{cfg.buildcfg}/",
 		"Build/assimp/%{cfg.buildcfg}/",
 		"SDK/glew/lib/Release/x64",
 	}
@@ -167,6 +169,7 @@ project "Game"
 		"SDL2main.lib",
 		"SDL2_image.lib",
 		"vulkan-1.lib",
+		"zlib.lib",
 		"assimp.lib",
 		"glew32.lib",
 		"opengl32.lib",
@@ -178,6 +181,7 @@ project "Game"
 		"SDL2",
 		"SDL2main",
 		"SDL2_image",
+		"zlibstatic",
 		"assimp",
 	}
 	
@@ -196,7 +200,7 @@ project "Game"
 			"HYDRO_PLATFORM_WIN32",
 		}
 		
-		postbuildcommands
+		prebuildcommands
 		{
 			"echo D|xcopy \"$(SolutionDir)Build\\SDL2\\$(Configuration)\\*.*\" \"$(TargetDir)\" /y /E",
 			"echo D|xcopy \"$(SolutionDir)Build\\SDL2_image\\$(Configuration)\\*.*\" \"$(TargetDir)\" /y /E",
