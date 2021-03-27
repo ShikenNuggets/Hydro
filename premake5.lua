@@ -33,11 +33,21 @@ externalproject "SDL2_image"
 		"SDL2",
 	}
 	
+externalproject "zlibstatic"
+	location "SDK\AssImp\build\contrib\zlib"
+	filename "zlibstatic"
+	kind "StaticLib"
+	language "C++"
+	
 externalproject "assimp"
 	location "SDK/AssImp/build/code"
 	filename "assimp"
 	kind "SharedLib"
 	language "C++"
+	dependson
+	{
+		"zlibstatic"
+	}
 
 project "Hydro"
 	location "Hydro"
