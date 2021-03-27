@@ -4,3 +4,6 @@
 [submodule "SDK/SDL2_image"]
 	path = SDK/SDL2_image
 	url = https://github.com/libsdl-org/SDL_image
+[submodule "SDK/AssImp"]
+	path = SDK/AssImp
+	url = https://github.com/ShikenNuggets/assimp.git
