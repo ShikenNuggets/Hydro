@@ -130,6 +130,7 @@ project "Game"
 	
 	targetdir ("Build/%{prj.name}/%{cfg.buildcfg}/") 
 	objdir ("Build/temp//%{prj.name}/%{cfg.buildcfg}/%{prj.name}") 
+	debugdir ("%{cfg.targetdir}")
 	
 	files
 	{
