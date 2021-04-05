@@ -26,7 +26,7 @@ void App::DeleteInstance(){
 }
 #endif //_DEBUG
 
-App::App() : window(nullptr), resourceMgr(nullptr), renderer(nullptr){
+App::App() : window(nullptr), resourceMgr(nullptr), renderer(nullptr), currentScene(nullptr){
 }
 
 App::~App(){

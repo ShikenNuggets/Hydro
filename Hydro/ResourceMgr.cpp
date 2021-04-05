@@ -7,7 +7,7 @@ using namespace Hydro;
 
 ResourceMgr::ResourceMgr() : resources(){
 	//TODO - This is temp. Load all this crap from a JSON file or something
-	resources.emplace("RoomModel", new Model(ModelLoader::Get()->LoadModel("Resources/Models/viking_room.obj")));
+	resources.emplace("RoomModel", new Model(ModelLoader::Get()->Test_LoadModel("Resources/Models/viking_room.obj")));
 	resources.emplace("RoomTexture", new Texture(TextureLoader::Get()->LoadImage("Resources/Textures/viking_room.png")));
 }
 

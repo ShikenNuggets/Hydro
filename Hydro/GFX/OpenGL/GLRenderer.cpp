@@ -2,7 +2,8 @@
 
 #include "Debug.h"
 #include "FileSystem.h"
-#include "GLRenderInfo.h"
+#include "Objects/GameObject.h"
+#include "GFX/OpenGL/GLRenderInfo.h"
 
 using namespace Hydro;
 
@@ -147,11 +148,12 @@ void GLRenderer::Render(){
 		SetViewport(cam->GetViewportRect());
 
 		for(MeshRenderer* mesh : meshes){
-			dynamic_cast<GLRenderInfo*>(mesh->renderInfo)->Render(Matrix4::Identity(), cam->GetViewMatrix(), cam->GetProjectionMatrix());
+			Debug::Assert(mesh->GetObject() != nullptr);
+			dynamic_cast<GLRenderInfo*>(mesh->renderInfo)->Render(mesh->GetObject()->GetTransform().rotation.ToMatrix4(), cam->GetViewMatrix(), cam->GetProjectionMatrix());
 		}
 	}
 
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT);
 
 	mainFBO->Bind();
 	//for(Camera* cam : cameras){
@@ -172,7 +174,7 @@ void GLRenderer::Render(){
 	mainFBO->Unbind();
 
 	//Setup Post-Processing
-	SetViewport(ViewportRect(0, 0, window->Width(), window->Height()));
+	SetViewport(ViewportRect(0, 0, static_cast<float>(window->Width()), static_cast<float>(window->Height())));
 	postVAO->Bind();
 	glDisable(GL_DEPTH_TEST);
 	postShader->Bind();

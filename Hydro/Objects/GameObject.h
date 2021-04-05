@@ -6,9 +6,6 @@
 #include "Objects/Component.h"
 #include "Objects/Transform.h"
 
-//TODO - TEMP
-#include "GFX/MeshRenderer.h"
-
 namespace Hydro{
 	class GameObject{
 	public:
@@ -17,6 +14,7 @@ namespace Hydro{
 
 		void AddComponent(Component* comp_){
 			_ASSERT(comp_ != nullptr);
+			comp_->SetObject(this);
 			components.push_back(comp_);
 		}
 
