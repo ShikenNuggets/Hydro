@@ -7,3 +7,6 @@
 [submodule "SDK/SDL2_image"]
 	path = SDK/SDL2_image
 	url = https://github.com/ShikenNuggets/SDL_image
+[submodule "SDK/JSON"]
+	path = SDK/JSON
+	url = https://github.com/nlohmann/json.git

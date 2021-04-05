@@ -58,7 +58,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>HYDRO_PLATFORM_WIN32;HYDRO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;..\SDK\AssImp\include;..\SDK\AssImp\build\include;..\SDK\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;..\SDK\AssImp\include;..\SDK\AssImp\build\include;..\SDK\glew\include;..\SDK\JSON\single_include\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>HYDRO_PLATFORM_WIN32;HYDRO_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;..\SDK\AssImp\include;..\SDK\AssImp\build\include;..\SDK\glew\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;..\SDK\include;..\SDK\SDL2\include;..\SDK\SDL2_image;C:\VulkanSDK\1.2.141.2\Include;..\SDK\AssImp\include;..\SDK\AssImp\build\include;..\SDK\glew\include;..\SDK\JSON\single_include\nlohmann;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
