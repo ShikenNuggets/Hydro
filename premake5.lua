@@ -150,6 +150,7 @@ project "Game"
 		"SDK/AssImp/include",
 		"SDK/AssImp/build/include",
 		"SDK/glew/include",
+		"SDK/JSON/single_include/nlohmann",
 	}
 	
 	libdirs
