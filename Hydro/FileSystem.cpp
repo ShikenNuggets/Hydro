@@ -11,7 +11,7 @@ bool FileSystem::Initialize(){
 void FileSystem::Destroy(){
 }
 
-bool FileSystem::FileExists(std::string file_){
+bool FileSystem::FileExists(const std::string& file_){
 	std::fstream filestream;
 	filestream.open(file_, std::ios::in);
 
@@ -23,7 +23,7 @@ bool FileSystem::FileExists(std::string file_){
 	}
 }
 
-std::vector<std::string> FileSystem::ReadFile(std::string file_){
+std::vector<std::string> FileSystem::ReadFile(const std::string& file_){
 	std::vector<std::string> fileContents;
 
 	std::fstream filestream;
@@ -44,7 +44,7 @@ std::vector<std::string> FileSystem::ReadFile(std::string file_){
 	return fileContents;
 }
 
-std::string FileSystem::ReadFileToString(std::string file_){
+std::string FileSystem::ReadFileToString(const std::string& file_){
 	std::string result;
 	std::vector<std::string> fileContents = ReadFile(file_);
 	for(std::string s : fileContents){
@@ -72,7 +72,16 @@ std::vector<char> FileSystem::ReadBinaryFile(const std::string& file_){
 	return buffer;
 }
 
-void FileSystem::WriteToFile(std::string file_, std::string content_, WriteType type_){
+nlohmann::json FileSystem::ReadJsonFile(const std::string& file_){
+	std::string contents = ReadFileToString(file_);
+	if(contents.empty()){
+		return nlohmann::json();
+	}
+
+	return nlohmann::json::parse(contents);
+}
+
+void FileSystem::WriteToFile(const std::string& file_, const std::string& content_, WriteType type_){
 	std::fstream filestream;
 
 	switch(type_){
@@ -98,7 +107,7 @@ void FileSystem::WriteToFile(std::string file_, std::string content_, WriteType 
 	filestream.close();
 }
 
-void FileSystem::ReadRecords(std::string file_, std::map<std::string, std::map<std::string, std::string>>& records_){
+void FileSystem::ReadRecords(const std::string& file_, std::map<std::string, std::map<std::string, std::string>>& records_){
 	std::fstream filestream;
 	filestream.open(file_, std::ios::in);
 
@@ -130,7 +139,7 @@ void FileSystem::ReadRecords(std::string file_, std::map<std::string, std::map<s
 	}
 }
 
-void FileSystem::WriteRecords(std::string file_, const std::map<std::string, std::map<std::string, std::string>>& records_, WriteType type_){
+void FileSystem::WriteRecords(const std::string& file_, const std::map<std::string, std::map<std::string, std::string>>& records_, WriteType type_){
 	std::fstream filestream;
 
 	switch(type_){
