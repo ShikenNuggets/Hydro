@@ -4,8 +4,8 @@
 namespace Hydro{
 	class Resource{
 	public:
-		Resource(){}
-		virtual ~Resource(){}
+		Resource() = default;
+		virtual ~Resource() = default;
 	};
 }
 

@@ -1,0 +1,4 @@
+[
+	{"type":"Model", "name":"RoomModel", "location":"Resources/Models/viking_room.obj"},
+	{"type":"Texture", "name":"RoomTexture", "location":"Resources/Textures/viking_room.png"}
+]
